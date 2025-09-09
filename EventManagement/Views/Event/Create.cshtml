@@ -1,0 +1,9 @@
+﻿@model EventManagement.Models.Event
+
+<form asp-action="Create" method="post">
+    <input type="text" name="Title" placeholder="Event Title" required />
+    <textarea name="Description" placeholder="Event Description"></textarea>
+    <input type="datetime-local" name="EventDateTime" required />
+    <input type="number" name="MaxParticipants" placeholder="Max Participants" required />
+    <button type="submit">Create Event</button>
+</form>
