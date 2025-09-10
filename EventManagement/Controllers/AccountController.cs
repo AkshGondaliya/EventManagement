@@ -1,20 +1,22 @@
-﻿using BCrypt.Net;
-using EventManagement.Data;
+﻿using AutoMapper;
+using BCrypt.Net;
 using EventManagement.Models;
-
+using EventManagement.Repositories;
+using EventManagement.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 
-namespace CollegeEventManagement.Controllers
+namespace EventManagement.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public AccountController(AppDbContext context)
+        public AccountController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         // GET: Register
@@ -22,19 +24,31 @@ namespace CollegeEventManagement.Controllers
 
         // POST: Register
         [HttpPost]
-        public IActionResult Register(User user)
+        public IActionResult Register(UserViewModel registerVM)
         {
-            if (_context.Users.Any(u => u.Email == user.Email))
+            if (!ModelState.IsValid)
             {
-                ViewBag.Error = "Email already exists!";
-                return View(user);
+                return View(registerVM);
             }
 
-            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
-            user.Role = "Student"; // default role for new users
+            // Check if email already exists
+            if (_unitOfWork.Users.EmailExists(registerVM.Email))
+            {
+                ViewBag.Error = "Email already exists!";
+                return View(registerVM);
+            }
 
-            _context.Users.Add(user);
-            _context.SaveChanges();
+            // Map ViewModel to Entity
+            var user = _mapper.Map<User>(registerVM);
+
+            // Hash password before saving
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerVM.Password);
+
+            // Assign default role
+            user.Role = "Student";
+
+            _unitOfWork.Users.Add(user);
+            _unitOfWork.Save();
 
             return RedirectToAction("Login");
         }
@@ -46,7 +60,7 @@ namespace CollegeEventManagement.Controllers
         [HttpPost]
         public IActionResult Login(string email, string password)
         {
-            var user = _context.Users.SingleOrDefault(u => u.Email == email);
+            var user = _unitOfWork.Users.GetByEmail(email);
 
             if (user != null && BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
             {
