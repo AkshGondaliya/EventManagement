@@ -59,5 +59,28 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    @if (TempData["Notification"] != null)
+    {
+        <div id="toastNotification" class="toast-notification">
+            @TempData["Notification"]
+        </div>
+
+        <script>
+            // Show the toast notification
+            const toast = document.getElementById('toastNotification');
+            if (toast) {
+                // Add 'show' class to slide it in
+                setTimeout(() => {
+                    toast.classList.add('show');
+                }, 100); // Small delay to ensure transition works on page load
+
+                // Hide the toast after 5 seconds
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 5000);
+            }
+        </script>
+    }
 </body>
 </html>

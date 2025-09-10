@@ -2,59 +2,53 @@
 
 @{
     ViewData["Title"] = "Register";
+    Layout = null; // Use a null layout for a standalone page
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-lg">
-                <div class="card-header bg-primary text-white text-center">
-                    <h4>User Registration</h4>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Event Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body class="login-page-body">
+    <div class="login-wrapper">
+        <div class="login-image-panel">
+            <h1>Join EventFlow</h1>
+            <p>Start your journey with us and discover amazing events near you.</p>
+        </div>
+        <div class="login-form-panel">
+            <h2>Create Account</h2>
+
+            <form asp-action="Register" method="post" novalidate>
+                <div class="input-group">
+                    <input type="text" asp-for="FullName" class="form-control" placeholder="Full Name" required />
+                    <i class="fa-solid fa-user"></i>
                 </div>
-                <div class="card-body">
-                    <form asp-action="Register" method="post">
+                <span asp-validation-for="FullName" class="validation-error"></span>
 
-                        <!-- Display summary of validation errors -->
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-                        <!-- Full Name Field -->
-                        <div class="form-group mb-3">
-                            <label asp-for="FullName" class="form-label"></label>
-                            <input asp-for="FullName" class="form-control" placeholder="Enter full name" />
-                            <span asp-validation-for="FullName" class="text-danger"></span>
-                        </div>
-
-                        <!-- Email Field -->
-                        <div class="form-group mb-3">
-                            <label asp-for="Email" class="form-label"></label>
-                            <input asp-for="Email" class="form-control" placeholder="Enter email address" />
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
-
-                        <!-- Password Field -->
-                        <div class="form-group mb-3">
-                            <label asp-for="Password" class="form-label"></label>
-                            <input asp-for="Password" type="password" class="form-control" placeholder="Enter password" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                        </div>
-
-                        <!-- Submit Button -->
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Register</button>
-                        </div>
-
-                        <!-- Link to Login Page -->
-                        <div class="text-center mt-3">
-                            <p>Already have an account? <a asp-action="Login" asp-controller="Account">Login here</a></p>
-                        </div>
-                    </form>
+                <div class="input-group">
+                    <input type="email" asp-for="Email" class="form-control" placeholder="Email Address" required />
+                    <i class="fa-solid fa-envelope"></i>
                 </div>
-            </div>
+                <span asp-validation-for="Email" class="validation-error"></span>
+
+                <div class="input-group">
+                    <input type="password" asp-for="Password" class="form-control" placeholder="Password" required />
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <span asp-validation-for="Password" class="validation-error"></span>
+
+                <button type="submit" class="btn btn-primary" style="width:100%; margin-top: 1rem;">Sign Up</button>
+            </form>
+
+            <p class="form-footer">
+                Already have an account? <a asp-action="Login">Sign In</a>
+            </p>
         </div>
     </div>
-</div>
-
-@section Scripts {
-    <!-- For Client-Side Validation -->
-    <partial name="_ValidationScriptsPartial" />
-}
+</body>
+</html>

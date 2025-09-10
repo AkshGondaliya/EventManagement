@@ -1,0 +1,42 @@
+﻿@using Microsoft.AspNetCore.Http
+@model IEnumerable<EventManagement.Models.Event>
+
+@{
+    ViewData["Title"] = "Browse Events";
+}
+
+<div class="container">
+    <h1 class="page-title">Upcoming Events</h1>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    <div class="event-grid">
+        @foreach (var ev in Model)
+        {
+            <div class="event-card">
+                <div class="event-card-body">
+                    <h5 class="event-card-title">@ev.Title</h5>
+                    <p class="event-card-date">@ev.EventDateTime.ToString("dddd, dd MMMM yyyy 'at' h:mm tt")</p>
+                    <p class="event-card-text">@ev.Description</p>
+                </div>
+                <div class="event-card-footer">
+                    <span>@ev.Registrations.Count() / @ev.MaxParticipants Spots Taken</span>
+                    @if (Context.Session.GetInt32("UserId") != null)
+                    {
+                        <form asp-action="RegisterForEvent" method="post">
+                            <input type="hidden" name="eventId" value="@ev.EventId" />
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </form>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,30 @@
+﻿@model IEnumerable<EventManagement.Models.Registration>
+
+@{
+    ViewData["Title"] = "My Registrations";
+}
+
+<div class="container">
+    <div class="form-card" style="max-width: 900px; margin-top: 2rem;">
+        <h1 style="text-align:center;">My Registrations</h1>
+        <table class="table" style="margin-top: 2rem; color: var(--text-primary);">
+            <thead>
+                <tr>
+                    <th>Event Title</th>
+                    <th>Event Date</th>
+                    <th>Registration Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var reg in Model)
+                {
+                    <tr>
+                        <td>@reg.Event.Title</td>
+                        <td>@reg.Event.EventDateTime.ToString("g")</td>
+                        <td>@reg.RegistrationDate.ToString("g")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
