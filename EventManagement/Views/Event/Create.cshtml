@@ -1,9 +1,30 @@
 ﻿@model EventManagement.Models.Event
+@{
+    ViewData["Title"] = "Create a New Event";
+}
 
-<form asp-action="Create" method="post">
-    <input type="text" name="Title" placeholder="Event Title" required />
-    <textarea name="Description" placeholder="Event Description"></textarea>
-    <input type="datetime-local" name="EventDateTime" required />
-    <input type="number" name="MaxParticipants" placeholder="Max Participants" required />
-    <button type="submit">Create Event</button>
-</form>
+<div class="container">
+    <div class="form-card">
+        <h1>Create a New Event</h1>
+        <form asp-action="Create" method="post">
+            <div class="form-group">
+                <label asp-for="Title">Event Title</label>
+                <input asp-for="Title" class="form-control" placeholder="What is the name of your event?" required />
+            </div>
+            <div class="form-group">
+                <label asp-for="Description">Description</label>
+                <textarea asp-for="Description" class="form-control" placeholder="Tell us more about the event" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+                <label asp-for="EventDateTime">Date and Time</label>
+                <input asp-for="EventDateTime" class="form-control" type="datetime-local" required />
+            </div>
+            <div class="form-group">
+                <label asp-for="MaxParticipants">Maximum Participants</label>
+                <input asp-for="MaxParticipants" class="form-control" type="number" placeholder="e.g., 50" required />
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width:100%; padding-top: 1rem; padding-bottom: 1rem;">Create Event</button>
+        </form>
+    </div>
+</div>
