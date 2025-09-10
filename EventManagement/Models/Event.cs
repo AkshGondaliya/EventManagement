@@ -7,6 +7,8 @@ namespace EventManagement.Models
     {
         public int EventId { get; set; }
         public string Title { get; set; }
+
+
         public string Description { get; set; }
         public DateTime EventDateTime { get; set; }
         public int MaxParticipants { get; set; }

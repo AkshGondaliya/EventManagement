@@ -1,4 +1,5 @@
 using EventManagement.Data;
+using EventManagement.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,9 +28,17 @@ namespace EventManagement
         {
             services.AddControllersWithViews();
             services.AddSession();
+           
+
+            // Register AutoMapper
+            
 
             services.AddDbContext<AppDbContext>(options =>
               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddAutoMapper(typeof(Startup));
+
+            // Register UnitOfWork if you haven't already
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         }
 

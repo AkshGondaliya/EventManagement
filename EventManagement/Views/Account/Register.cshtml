@@ -1,8 +1,60 @@
-﻿@model EventManagement.Models.User
+﻿@model EventManagement.ViewModels.UserViewModel
 
-<form asp-action="Register" method="post">
-    <input type="text" name="FullName" placeholder="Full Name" required />
-    <input type="email" name="Email" placeholder="Email" required />
-    <input type="password" name="PasswordHash" placeholder="Password" required />
-    <button type="submit">Register</button>
-</form>
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4>User Registration</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Register" method="post">
+
+                        <!-- Display summary of validation errors -->
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <!-- Full Name Field -->
+                        <div class="form-group mb-3">
+                            <label asp-for="FullName" class="form-label"></label>
+                            <input asp-for="FullName" class="form-control" placeholder="Enter full name" />
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+                        </div>
+
+                        <!-- Email Field -->
+                        <div class="form-group mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control" placeholder="Enter email address" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="form-group mb-3">
+                            <label asp-for="Password" class="form-label"></label>
+                            <input asp-for="Password" type="password" class="form-control" placeholder="Enter password" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </div>
+
+                        <!-- Link to Login Page -->
+                        <div class="text-center mt-3">
+                            <p>Already have an account? <a asp-action="Login" asp-controller="Account">Login here</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- For Client-Side Validation -->
+    <partial name="_ValidationScriptsPartial" />
+}
