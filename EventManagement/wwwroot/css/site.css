@@ -1,71 +1,450 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
+﻿/* --- Imports & Variables --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
-}
-
-/* Provide sufficient contrast against white background */
-a {
-  color: #0366d6;
-}
-
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+:root {
+    --primary-color: #6d28d9;
+    --primary-hover: #5b21b6;
+    --dark-bg: #111827;
+    --dark-card: #1f2937;
+    --dark-input: #374151;
+    --border-color: #4b5563;
+    --text-primary: #f9fafb;
+    --text-secondary: #9ca3af;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-}
-
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  font-size: 14px;
-}
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.border-top {
-  border-top: 1px solid #e5e5e5;
-}
-.border-bottom {
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-}
-
-button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
-}
-
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  position: relative;
-  min-height: 100%;
+/* --- Global Resets & Body --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--dark-bg);
+    color: var(--text-primary);
+    line-height: 1.6;
 }
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1rem 0;
 }
+
+/* --- Header / Navbar --- */
+.main-header {
+    background-color: var(--dark-card);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.navbar-nav {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.nav-item a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+    padding: 0.25rem 0;
+}
+
+    .nav-item a:hover {
+        color: var(--text-primary);
+    }
+
+.nav-item .user-name {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+/* --- Buttons --- */
+.btn {
+    display: inline-block;
+    padding: 0.6rem 1.5rem; /* This matches the 9.6px 24px from your image */
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white !important;
+}
+
+    .btn-primary:hover {
+        background-color: var(--primary-hover);
+        transform: translateY(-2px);
+    }
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color);
+}
+
+    .btn-secondary:hover {
+        background-color: var(--dark-input);
+        border-color: var(--text-secondary);
+    }
+
+
+/* --- Main Content Area --- */
+main {
+    min-height: calc(100vh - 150px);
+}
+
+/* --- Footer --- */
+.main-footer {
+    background-color: var(--dark-card);
+    border-top: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 2rem 0;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+    .main-footer a {
+        color: var(--primary-color);
+    }
+
+/* --- Home Page Hero Section --- */
+.hero-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6rem 0;
+}
+
+    .hero-section h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        max-width: 650px;
+        line-height: 1.2;
+    }
+
+    .hero-section p {
+        font-size: 1.25rem;
+        color: var(--text-secondary);
+        max-width: 600px;
+        margin-bottom: 2.5rem;
+    }
+
+    .hero-section .btn-group {
+        display: flex;
+        gap: 1rem;
+    }
+
+
+/* --- LOGIN/REGISTER TWO-COLUMN PAGE STYLES --- */
+
+.login-page-body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #111827;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.login-wrapper {
+    display: flex;
+    width: 90%;
+    max-width: 1000px;
+    min-height: 600px;
+    background-color: #1f2937;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+    border-radius: 20px;
+    overflow: hidden;
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.login-image-panel {
+    width: 50%;
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?auto=format&fit=crop&q=80');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #fff;
+    padding: 40px;
+}
+
+    .login-image-panel h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+    }
+
+    .login-image-panel p {
+        font-size: 1.1rem;
+        max-width: 300px;
+        line-height: 1.6;
+    }
+
+.login-form-panel {
+    width: 50%;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #f9fafb;
+}
+
+    .login-form-panel h2 {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        text-align: center;
+        color: #fff;
+    }
+
+.input-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+    .input-group i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9ca3af;
+        transition: color 0.3s;
+    }
+
+    .input-group .form-control {
+        width: 100%;
+        padding: 1rem 1rem 1rem 2.75rem;
+        background-color: #374151;
+        border: 1px solid #4b5563;
+        border-radius: 10px;
+        color: #f9fafb;
+        font-size: 1rem;
+    }
+
+        .input-group .form-control:focus {
+            outline: none;
+            border-color: #6d28d9;
+            box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.4);
+        }
+
+            .input-group .form-control:focus + i {
+                color: #6d28d9;
+            }
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #9ca3af;
+    margin: 1.5rem 0;
+}
+
+    .divider::before, .divider::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid #4b5563;
+    }
+
+    .divider:not(:empty)::before {
+        margin-right: .5em;
+    }
+
+    .divider:not(:empty)::after {
+        margin-left: .5em;
+    }
+
+.social-logins {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem;
+    border: 1px solid #4b5563;
+    border-radius: 10px;
+    color: #f9fafb;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+    .social-btn i {
+        margin-right: 0.5rem;
+        font-size: 1.2rem;
+    }
+
+    .social-btn:hover {
+        background-color: #4b5563;
+        border-color: #6b7280;
+    }
+
+.form-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #9ca3af;
+}
+
+    .form-footer a {
+        color: #8b5cf6;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+@media (max-width: 850px) {
+    .login-wrapper {
+        flex-direction: column;
+        width: 95%;
+        min-height: auto;
+        max-width: 450px;
+    }
+
+    .login-image-panel {
+        display: none;
+    }
+
+    .login-form-panel {
+        width: 100%;
+        padding: 30px;
+    }
+}
+/* --- Forms (used on Create page) --- */
+.form-card {
+    max-width: 700px;
+    margin: 2rem auto;
+    background-color: var(--dark-card);
+    padding: 2.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+    .form-card h1 {
+        text-align: center;
+        margin-bottom: 2rem;
+        font-weight: 600;
+    }
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+    }
+
+.form-control {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    background-color: var(--dark-input);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.4);
+    }
+
+textarea.form-control {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.6rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white !important; /* Ensure text is white */
+}
+
+    .btn-primary:hover {
+        background-color: var(--primary-hover);
+        transform: translateY(-2px);
+    }
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--text-primary) !important; /* Ensure text is correct color */
+    border: 1px solid var(--border-color);
+}
+
+    .btn-secondary:hover {
+        background-color: var(--dark-input);
+        border-color: var(--text-secondary);
+    }
