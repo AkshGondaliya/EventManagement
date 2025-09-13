@@ -36,6 +36,19 @@ namespace EventManagement.Data
                 .WithMany(e => e.Registrations)
                 .HasForeignKey(r => r.EventId)
                 .OnDelete(DeleteBehavior.Cascade); // This can stay as cascade
+
+            var adminPasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin@123");
+
+            modelBuilder.Entity<User>().HasData(new User
+            {
+                UserId = 100,
+                FullName = "System Admin",
+                Email = "admin@college.edu",
+                PasswordHash = adminPasswordHash,
+                Role = "Admin"
+            });
+
         }
+
     }
 }

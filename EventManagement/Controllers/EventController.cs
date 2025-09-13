@@ -73,9 +73,24 @@ namespace CollegeEventManagement.Controllers // Note: Your namespace might be di
                 return RedirectToAction("Login", "Account");
             }
 
-            ev.CreatedBy = userId.Value;
-            var userRole = HttpContext.Session.GetString("Role");
+            // Validate Event DateTime
+            var now = DateTime.Now;
+            if (ev.EventDateTime < now.AddHours(24))
+            {
+                ModelState.AddModelError("EventDateTime", "The event date and time must be at least 24 hours from now.");
+            }
 
+            if (!ModelState.IsValid)
+            {
+                // If validation fails, return the same view with the entered data
+                return View(ev);
+            }
+
+            // Assign the creator
+            ev.CreatedBy = userId.Value;
+
+            // Set status based on role
+            var userRole = HttpContext.Session.GetString("Role");
             if (userRole == "Admin")
             {
                 ev.Status = "Approved";
@@ -87,6 +102,7 @@ namespace CollegeEventManagement.Controllers // Note: Your namespace might be di
                 TempData["SuccessNotification"] = "Your event request has been submitted for approval!";
             }
 
+            // Save to database
             _context.Events.Add(ev);
             await _context.SaveChangesAsync();
 
@@ -130,24 +146,39 @@ namespace CollegeEventManagement.Controllers // Note: Your namespace might be di
                 return Forbid();
             }
 
-            // Check if already registered
-            bool isAlreadyRegistered = await _context.Registrations
-                .AnyAsync(r => r.EventId == viewModel.EventId && r.UserId == userId.Value);
+            // Get event details with registrations
+            var eventDetails = await _context.Events
+                .Include(e => e.Registrations)
+                .FirstOrDefaultAsync(e => e.EventId == viewModel.EventId);
 
+            if (eventDetails == null)
+            {
+                TempData["Notification"] = "The event does not exist.";
+                return RedirectToAction("Index", "Home");
+            }
+
+            // 1. Check if already registered
+            bool isAlreadyRegistered = eventDetails.Registrations.Any(r => r.UserId == userId.Value);
             if (isAlreadyRegistered)
             {
-                // Set the notification message
                 TempData["Notification"] = "You are already registered for this event.";
-                // Redirect back to the details page to show the message
                 return RedirectToAction("Details", new { id = viewModel.EventId });
             }
 
+            // 2. Check if the event is full
+            if (eventDetails.Registrations.Count >= eventDetails.MaxParticipants)
+            {
+                TempData["Notification"] = "Registration is closed because this event is full.";
+                return RedirectToAction("Details", new { id = viewModel.EventId });
+            }
+
+            // 3. Register the user
             var registration = new Registration
             {
-                UserId = viewModel.UserId,
+                UserId = userId.Value,
                 EventId = viewModel.EventId,
                 RegistrationDate = DateTime.Now,
-                Status = "Paid"
+                Status = "Paid" // or "Pending" based on payment flow
             };
 
             _context.Registrations.Add(registration);
@@ -156,6 +187,7 @@ namespace CollegeEventManagement.Controllers // Note: Your namespace might be di
             TempData["SuccessNotification"] = "You have successfully registered for the event!";
             return RedirectToAction("MyRegistrations");
         }
+
 
         [HttpPost]
         public async Task<IActionResult> CancelRegistration(int registrationId)

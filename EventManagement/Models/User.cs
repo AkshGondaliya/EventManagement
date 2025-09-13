@@ -27,7 +27,7 @@ namespace EventManagement.Models
         //[RegularExpression("^(Admin|EventCoordinator|Student)$", ErrorMessage = "Role must be Admin, EventCoordinator, or Student")]
         public string Role { get; set; }
         public string ProfilePictureUrl { get; set; }
-
+        public string CollegeName { get; set; }
         public ICollection<Registration> Registrations { get; set; }
     }
 }
