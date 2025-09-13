@@ -20,11 +20,9 @@ namespace CollegeEventManagement.Controllers // Note: Your namespace might be di
         }
 
         // GET: /Event/Index
-        public IActionResult Index(string searchString, string sortOrder)
+        public IActionResult Index(string searchString)
         {
             ViewData["CurrentFilter"] = searchString;
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
 
             var eventsQuery = _context.Events
                                       .Include(e => e.Registrations)
@@ -34,22 +32,6 @@ namespace CollegeEventManagement.Controllers // Note: Your namespace might be di
             {
                 eventsQuery = eventsQuery.Where(e => e.Title.Contains(searchString)
                                                || e.Description.Contains(searchString));
-            }
-
-            switch (sortOrder)
-            {
-                case "name_desc":
-                    eventsQuery = eventsQuery.OrderByDescending(e => e.Title);
-                    break;
-                case "Date":
-                    eventsQuery = eventsQuery.OrderBy(e => e.EventDateTime);
-                    break;
-                case "date_desc":
-                    eventsQuery = eventsQuery.OrderByDescending(e => e.EventDateTime);
-                    break;
-                default:
-                    eventsQuery = eventsQuery.OrderBy(e => e.Title);
-                    break;
             }
 
             var eventsList = eventsQuery.ToList();
