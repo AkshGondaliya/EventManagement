@@ -13,6 +13,7 @@
                     <th>Event Title</th>
                     <th>Event Date</th>
                     <th>Registration Date</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -22,6 +23,12 @@
                         <td>@reg.Event.Title</td>
                         <td>@reg.Event.EventDateTime.ToString("g")</td>
                         <td>@reg.RegistrationDate.ToString("g")</td>
+                        <td>
+                            <form asp-action="CancelRegistration" method="post">
+                                <input type="hidden" name="registrationId" value="@reg.RegistrationId" />
+                                <button type="submit" class="btn btn-secondary" style="padding: 0.4rem 0.8rem;">Cancel</button>
+                            </form>
+                        </td>
                     </tr>
                 }
             </tbody>

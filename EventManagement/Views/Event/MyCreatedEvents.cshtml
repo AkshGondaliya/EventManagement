@@ -1,18 +1,21 @@
 ﻿@model IEnumerable<EventManagement.Models.Event>
 
 @{
-    ViewData["Title"] = "My Created Events";
+    ViewData["Title"] = "My Events";
 }
 
 <div class="container">
     <div class="form-card" style="max-width: 900px; margin-top: 2rem;">
-        <h1 style="text-align:center;">My Created Events</h1>
+        <h1 style="text-align:center;">My Approved Events</h1>
+        <p style="text-align:center; color: var(--text-secondary);">Here are the events you created that have been approved.</p>
+
         <table class="table" style="margin-top: 2rem; color: var(--text-primary);">
             <thead>
                 <tr>
                     <th>Event Title</th>
                     <th>Event Date</th>
                     <th>Status</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -21,7 +24,10 @@
                     <tr>
                         <td>@ev.Title</td>
                         <td>@ev.EventDateTime.ToString("g")</td>
-                        <td>@ev.Status</td>
+                        <td><span class="status-approved">@ev.Status</span></td>
+                        <td>
+                            <a asp-action="ViewRegistrations" asp-route-id="@ev.EventId" class="btn btn-secondary" style="padding: 0.4rem 0.8rem;">View Registrations</a>
+                        </td>
                     </tr>
                 }
             </tbody>

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventManagement.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250907122341_init")]
-    partial class init
+    [Migration("20250912203037_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,14 +31,14 @@ namespace EventManagement.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CreatorUserId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("EventDateTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Fees")
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<int>("MaxParticipants")
                         .HasColumnType("int");
@@ -51,7 +51,7 @@ namespace EventManagement.Migrations
 
                     b.HasKey("EventId");
 
-                    b.HasIndex("CreatorUserId");
+                    b.HasIndex("CreatedBy");
 
                     b.ToTable("Events");
                 });
@@ -92,12 +92,18 @@ namespace EventManagement.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(30)")
+                        .HasMaxLength(30);
 
                     b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProfilePictureUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
@@ -112,7 +118,9 @@ namespace EventManagement.Migrations
                 {
                     b.HasOne("EventManagement.Models.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreatorUserId");
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("EventManagement.Models.Registration", b =>

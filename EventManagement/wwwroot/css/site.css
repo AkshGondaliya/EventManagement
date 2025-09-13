@@ -559,3 +559,326 @@ textarea.form-control {
     .toast-notification.show {
         transform: translateX(0); /* Slide in */
     }
+
+/* --- Navbar Dropdown --- */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-toggle {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    display: none; /* This is key - it should be hidden by default */
+    position: absolute;
+    right: 0;
+    background-color: var(--dark-card);
+    min-width: 180px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 0;
+}
+
+/* This rule makes the menu appear on hover */
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-item {
+    color: var(--text-secondary);
+    padding: 10px 20px;
+    text-decoration: none;
+    display: block;
+    font-weight: 500;
+}
+
+    .dropdown-item:hover {
+        background-color: var(--dark-input);
+        color: var(--text-primary);
+    }
+
+.dropdown-divider {
+    height: 1px;
+    margin: .5rem 0;
+    overflow: hidden;
+    background-color: var(--border-color);
+}
+
+
+/* --- Navbar Profile Picture --- */
+.profile-dropdown {
+    padding: 0;
+}
+
+.navbar-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* This makes the image round */
+    object-fit: cover; /* This prevents the image from stretching */
+}
+/* --- Profile Page --- */
+.profile-details {
+    margin-top: 2rem;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+    .detail-item label {
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .detail-item span {
+        font-weight: 600;
+    }
+
+.status-approved {
+    background-color: #14532d;
+    color: #4ade80;
+    padding: 0.25rem 0.5rem;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* --- Registration List Profile Picture --- */
+.attendee-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+/* --- Profile Page Header --- */
+.profile-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+    border: 4px solid var(--dark-card);
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+.profile-username {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.profile-email {
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+/* --- Event Details Page --- */
+.event-details-card {
+    max-width: 800px;
+    margin: 2rem auto;
+    background-color: var(--dark-card);
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+    .event-details-card h1 {
+        text-align: center;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    .event-details-card .event-date {
+        text-align: center;
+        color: var(--text-secondary);
+        margin-bottom: 1.5rem;
+    }
+    .event-details-card .event-description {
+        color: var(--text-primary);
+        line-height: 1.6;
+        margin-bottom: 2rem;
+    }
+    .event-details-card .event-location {
+        font-weight: 500;
+        margin-bottom: 1rem;
+    }
+    .event-details-card .event-organizer {
+        font-weight: 500;
+        margin-bottom: 2rem;
+    }
+    .event-details-card .btn-group {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+    }
+    /* --- Registration List Page --- */
+    .registration-list-card {
+        max-width: 800px;
+        margin: 2rem auto;
+        background-color: var(--dark-card);
+        padding: 2rem;
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+    }
+        .registration-list-card h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+        .registration-list-card table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .registration-list-card th, .registration-list-card td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .registration-list-card th {
+            background-color: var(--dark-input);
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        .registration-list-card tr:hover {
+            background-color: var(--dark-input);
+        }
+        .registration-list-card .no-registrations {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 2rem 0;
+        }
+        /* --- Responsive Adjustments --- */
+        @media (max-width: 768px) {
+            .event-grid {
+                grid-template-columns: 1fr;
+            }
+            .navbar-nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+            .hero-section p {
+                font-size: 1rem;
+            }
+            .btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+/* --- NEW Event Card and Details UI --- */
+
+/* Event Card on Index Page */
+.event-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.event-card {
+    background-color: var(--dark-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-decoration: none; /* Remove underline from link */
+    color: var(--text-primary); /* Ensure text color is right */
+}
+
+    .event-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+.event-card-header img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.event-card-body {
+    padding: 1.5rem;
+    flex-grow: 1;
+}
+
+.event-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.event-card-date {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.event-card-footer {
+    background-color: rgba(0,0,0,0.2);
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    border-top: 1px solid var(--border-color);
+}
+
+/* Event Details Page */
+.event-details-hero {
+    padding: 4rem 2rem;
+    background: linear-gradient(rgba(17, 24, 39, 0.8), rgba(17, 24, 39, 0.8)), url('https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&q=80');
+    background-size: cover;
+    background-position: center;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+    .event-details-hero h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #fff;
+    }
+
+    .event-details-hero p {
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+        margin-top: 0.5rem;
+    }
+
+/* --- Search Form --- */
+.search-form {
+    display: flex;
+    gap: 1rem;
+    max-width: 600px;
+    margin: 0 auto 2.5rem auto;
+}
+        /* End of site.css */

@@ -5,6 +5,7 @@ using EventManagement.Repositories;
 using EventManagement.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventManagement.Controllers
 {
@@ -67,6 +68,8 @@ namespace EventManagement.Controllers
                 HttpContext.Session.SetInt32("UserId", user.UserId);
                 HttpContext.Session.SetString("Role", user.Role);
                 HttpContext.Session.SetString("FullName", user.FullName);
+                // ADD THIS LINE
+                HttpContext.Session.SetString("ProfilePictureUrl", user.ProfilePictureUrl ?? "");
 
                 return RedirectToAction("Index", "Home");
             }

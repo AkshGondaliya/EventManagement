@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EventManagement.Migrations
 {
-    public partial class init : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,10 +13,11 @@ namespace EventManagement.Migrations
                 {
                     UserId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FullName = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true),
+                    FullName = table.Column<string>(maxLength: 30, nullable: false),
+                    Email = table.Column<string>(nullable: false),
                     PasswordHash = table.Column<string>(nullable: true),
-                    Role = table.Column<string>(nullable: true)
+                    Role = table.Column<string>(nullable: true),
+                    ProfilePictureUrl = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -34,15 +35,15 @@ namespace EventManagement.Migrations
                     EventDateTime = table.Column<DateTime>(nullable: false),
                     MaxParticipants = table.Column<int>(nullable: false),
                     Status = table.Column<string>(nullable: true),
-                    CreatedBy = table.Column<int>(nullable: false),
-                    CreatorUserId = table.Column<int>(nullable: true)
+                    Fees = table.Column<decimal>(type: "decimal(18, 2)", nullable: false),
+                    CreatedBy = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Events", x => x.EventId);
                     table.ForeignKey(
-                        name: "FK_Events_Users_CreatorUserId",
-                        column: x => x.CreatorUserId,
+                        name: "FK_Events_Users_CreatedBy",
+                        column: x => x.CreatedBy,
                         principalTable: "Users",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Restrict);
@@ -77,9 +78,9 @@ namespace EventManagement.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Events_CreatorUserId",
+                name: "IX_Events_CreatedBy",
                 table: "Events",
-                column: "CreatorUserId");
+                column: "CreatedBy");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Registrations_EventId",

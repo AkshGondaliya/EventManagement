@@ -36,35 +36,6 @@ namespace EventManagement.Controllers
             return View(users);
         }
 
-        // POST: /Admin/PromoteToCoordinator
-        [HttpPost]
-        public async Task<IActionResult> PromoteToCoordinator(int userId)
-        {
-            if (!IsAdmin()) return Unauthorized();
-
-            var user = await _context.Users.FindAsync(userId);
-            if (user != null && user.Role == "Student")
-            {
-                user.Role = "Event-Coordinator";
-                await _context.SaveChangesAsync();
-            }
-            return RedirectToAction("UserManagement");
-        }
-
-        // POST: /Admin/DemoteToStudent
-        [HttpPost]
-        public async Task<IActionResult> DemoteToStudent(int userId)
-        {
-            if (!IsAdmin()) return Unauthorized();
-
-            var user = await _context.Users.FindAsync(userId);
-            if (user != null && user.Role == "Event-Coordinator")
-            {
-                user.Role = "Student";
-                await _context.SaveChangesAsync();
-            }
-            return RedirectToAction("UserManagement");
-        }
 
         // GET: /Admin/EventApproval
         public async Task<IActionResult> EventApproval()

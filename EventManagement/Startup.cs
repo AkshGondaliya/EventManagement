@@ -28,10 +28,11 @@ namespace EventManagement
         {
             services.AddControllersWithViews();
             services.AddSession();
-           
+            services.AddHttpContextAccessor();
+
 
             // Register AutoMapper
-            
+
 
             services.AddDbContext<AppDbContext>(options =>
               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
