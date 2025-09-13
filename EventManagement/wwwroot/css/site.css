@@ -472,7 +472,7 @@ textarea.form-control {
     gap: 1.5rem;
 }
 
-.event-card {
+/*.event-card {
     background-color: var(--dark-card);
     border: 1px solid var(--border-color);
     border-radius: 12px;
@@ -517,7 +517,7 @@ textarea.form-control {
     align-items: center;
     font-size: 0.9rem;
     color: var(--text-secondary);
-}
+}*/
 
 /* Basic alert styling for TempData messages */
 .alert {
@@ -881,4 +881,42 @@ textarea.form-control {
     max-width: 600px;
     margin: 0 auto 2.5rem auto;
 }
+
+/* --- Input Group with Icons --- */
+.input-group {
+    position: relative;
+}
+
+    /* Base styles for any icon in the group */
+    .input-group > i {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9ca3af;
+        z-index: 10;
+    }
+
+    /* Icon on the left side */
+    .input-group .left-icon {
+        left: 15px;
+    }
+
+    /* Clickable icon on the right side */
+    .input-group .right-icon {
+        right: auto;
+        left: 390px;
+        cursor: pointer;
+    }
+
+    /* Add padding on both sides of the input to make space */
+    .input-group .form-control {
+        padding-left: 2.75rem; /* 44px */
+        padding-right: 2.75rem; /* 44px */
+    }
+
+        /* Highlight the left icon when the input is focused */
+        .input-group .form-control:focus ~ .left-icon {
+            color: var(--primary-color);
+        }
+
         /* End of site.css */
