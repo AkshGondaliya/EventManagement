@@ -1,0 +1,25 @@
+﻿@model EventManagement.ViewModels.ProfileViewModel
+
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<div class="container">
+    <div class="form-card" style="max-width: 600px; margin-top: 2rem;">
+        <h1>Edit Profile</h1>
+        <form asp-action="EditProfile" method="post">
+            <div class="form-group">
+                <label asp-for="FullName"></label>
+                <input asp-for="FullName" class="form-control" />
+                <span asp-validation-for="FullName" class="validation-error"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProfilePictureUrl"></label>
+                <input asp-for="ProfilePictureUrl" class="form-control" placeholder="http://... or leave blank" />
+                <span asp-validation-for="ProfilePictureUrl" class="validation-error"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width:100%; margin-top: 1.5rem;">Save Changes</button>
+        </form>
+    </div>
+</div>

@@ -1,4 +1,17 @@
 ﻿@using Microsoft.AspNetCore.Http
+@using System.Linq
+@inject EventManagement.Data.AppDbContext DbContext
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    var showMyEventsLink = false;
+    var userId = HttpContextAccessor.HttpContext.Session.GetInt32("UserId");
+    if (userId != null)
+    {
+        // Check if the user has any approved events they created
+        showMyEventsLink = DbContext.Events.Any(e => e.CreatedBy == userId && e.Status == "Approved");
+    }
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -22,16 +35,33 @@
                     <a asp-controller="Event" asp-action="Index">Events</a>
                 </li>
 
-                @if (!string.IsNullOrEmpty(Context.Session.GetString("FullName")))
+                @if (userId != null)
                 {
-                    <li class="nav-item">
-                        <a asp-controller="Event" asp-action="Create" class="btn btn-primary">Create Event</a>
-                    </li>
-                    <li class="nav-item user-name">
-                        Hi, @Context.Session.GetString("FullName")
-                    </li>
-                    <li class="nav-item">
-                        <a asp-controller="Account" asp-action="Logout" class="btn btn-secondary">Logout</a>
+                    <li class="nav-item dropdown">
+                        @{
+                            var profilePic = HttpContextAccessor.HttpContext.Session.GetString("ProfilePictureUrl");
+                            var avatarSrc = string.IsNullOrEmpty(profilePic) ? "/images/default-avatar.png" : profilePic;
+                        }
+                        <a href="#" class="dropdown-toggle profile-dropdown">
+                            <img src="@avatarSrc" class="navbar-avatar" alt="User Avatar" />
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" asp-controller="User" asp-action="Profile">Profile</a>
+                            @if (showMyEventsLink)
+                            {
+                                <a class="dropdown-item" asp-controller="Event" asp-action="MyCreatedEvents">My Events</a>
+                            }
+                            <a class="dropdown-item" asp-controller="Event" asp-action="MyRegistrations">My Registrations</a>
+
+                            @if (Context.Session.GetString("Role") == "Admin")
+                            {
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item admin-link" asp-controller="Admin" asp-action="UserManagement">User Management</a>
+                                <a class="dropdown-item admin-link" asp-controller="Admin" asp-action="EventApproval">Event Approval</a>
+                            }
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" asp-controller="Account" asp-action="Logout">Logout</a>
+                        </div>
                     </li>
                 }
                 else

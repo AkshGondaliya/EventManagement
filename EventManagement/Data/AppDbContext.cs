@@ -1,5 +1,4 @@
 ﻿using EventManagement.Models;
-using EventManagement.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventManagement.Data
@@ -12,21 +11,31 @@ namespace EventManagement.Data
         public DbSet<Event> Events { get; set; }
         public DbSet<Registration> Registrations { get; set; }
 
+        // ADD THIS ENTIRE METHOD
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Many-to-Many Relationship via Registration
-            modelBuilder.Entity<Registration>()
-                .HasKey(r => r.RegistrationId);
+            base.OnModelCreating(modelBuilder);
 
+            // An Event has one Creator (User)
+            modelBuilder.Entity<Event>()
+                .HasOne(e => e.Creator)
+                .WithMany() // A User can have many Events
+                .HasForeignKey(e => e.CreatedBy)
+                .OnDelete(DeleteBehavior.Restrict); // <-- This is the key change
+
+            // A Registration has one User
             modelBuilder.Entity<Registration>()
                 .HasOne(r => r.User)
                 .WithMany(u => u.Registrations)
-                .HasForeignKey(r => r.UserId);
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.Cascade); // This can stay as cascade
 
+            // A Registration has one Event
             modelBuilder.Entity<Registration>()
                 .HasOne(r => r.Event)
                 .WithMany(e => e.Registrations)
-                .HasForeignKey(r => r.EventId);
+                .HasForeignKey(r => r.EventId)
+                .OnDelete(DeleteBehavior.Cascade); // This can stay as cascade
         }
     }
 }

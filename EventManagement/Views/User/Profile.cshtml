@@ -1,0 +1,31 @@
+﻿@model EventManagement.Models.User
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="container">
+    <div class="form-card" style="max-width: 600px; margin-top: 2rem;">
+        <div class="profile-header">
+            <img src="@(Model.ProfilePictureUrl ?? "/images/default-avatar.png")" class="profile-avatar" alt="Profile Picture" />
+            <h1>My Profile</h1>
+        </div>
+
+        <div class="profile-details">
+            <div class="detail-item">
+                <label>Full Name</label>
+                <span>@Model.FullName</span>
+            </div>
+            <div class="detail-item">
+                <label>Email Address</label>
+                <span>@Model.Email</span>
+            </div>
+            <div class="detail-item">
+                <label>Role</label>
+                <span>@Model.Role</span>
+            </div>
+        </div>
+
+        <a asp-action="EditProfile" class="btn btn-secondary" style="width:100%; margin-top: 1.5rem;">Edit Profile</a>
+    </div>
+</div>
