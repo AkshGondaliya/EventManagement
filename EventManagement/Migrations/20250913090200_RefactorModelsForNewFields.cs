@@ -2,18 +2,20 @@
 
 namespace EventManagement.Migrations
 {
-    public partial class third : Migration
+    public partial class RefactorModelsForNewFields : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "CollegeName",
-                table: "Users",
+                name: "Branch",
+                table: "Registrations",
+                maxLength: 50,
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "Venue",
-                table: "Events",
+                name: "Semester",
+                table: "Registrations",
+                maxLength: 50,
                 nullable: true);
 
             migrationBuilder.UpdateData(
@@ -21,25 +23,25 @@ namespace EventManagement.Migrations
                 keyColumn: "UserId",
                 keyValue: 100,
                 column: "PasswordHash",
-                value: "$2b$10$UG9etNMcvDmMK47BqsDQl.DFxuCKrCQrfMc4VlvoLoefWhvwnAqSu");
+                value: "$2b$10$8CdJjrhV2QbPmEIMFKs8b.jbN6dmW74LYNR3kKngoUCLXExJ5jm32");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "CollegeName",
-                table: "Users");
+                name: "Branch",
+                table: "Registrations");
 
             migrationBuilder.DropColumn(
-                name: "Venue",
-                table: "Events");
+                name: "Semester",
+                table: "Registrations");
 
             migrationBuilder.UpdateData(
                 table: "Users",
                 keyColumn: "UserId",
                 keyValue: 100,
                 column: "PasswordHash",
-                value: "$2b$10$CpI1W9UaWPgJcO6iLuBXbuAD.HTQyT55M/FjN8DsI5ftmqQA0IM4C");
+                value: "$2b$10$kpZgnegpH.aREMA0YJOYC.GpYtzueUQNw.P0EhR0kTbpS/GIsRYWq");
         }
     }
 }

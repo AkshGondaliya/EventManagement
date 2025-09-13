@@ -23,7 +23,7 @@
 
             @if (ViewBag.Error != null)
             {
-                <div class="error-message">@ViewBag.Error</div>
+                <div class="error-message validation-error">@ViewBag.Error</div>
             }
 
             <form asp-action="Login" method="post" novalidate>
@@ -32,8 +32,9 @@
                     <i class="fa-solid fa-envelope"></i>
                 </div>
                 <div class="input-group">
-                    <input type="password" name="password" class="form-control" placeholder="Password" required />
-                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="password" name="Password" class="form-control" placeholder="Password" required />
+                    <i class="fa-solid fa-lock form-icon left-icon"></i>
+                    <i class="fa-solid fa-eye-slash form-icon right-icon" id="togglePassword"></i>
                 </div>
                 <button type="submit" class="btn btn-primary" style="width:100%;">Sign In</button>
             </form>
@@ -50,5 +51,19 @@
             </p>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const togglePassword = document.querySelector('#togglePassword');
+            if (togglePassword) {
+                togglePassword.addEventListener('click', function () {
+                    const passwordInput = document.querySelector('#password');
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    this.classList.toggle('fa-eye-slash');
+                    this.classList.toggle('fa-eye');
+                });
+            }
+        });
+    </script>
 </body>
 </html>

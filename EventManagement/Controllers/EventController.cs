@@ -20,21 +20,52 @@ namespace CollegeEventManagement.Controllers // Note: Your namespace might be di
         }
 
         // GET: /Event/Index
-        public IActionResult Index(string searchString)
+        public async Task<IActionResult> Index(string searchString, string sortOrder, string category)
         {
             ViewData["CurrentFilter"] = searchString;
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["CurrentCategory"] = category;
 
             var eventsQuery = _context.Events
                                       .Include(e => e.Registrations)
                                       .Where(e => e.Status == "Approved");
 
+            // Filtering Logic
             if (!String.IsNullOrEmpty(searchString))
             {
-                eventsQuery = eventsQuery.Where(e => e.Title.Contains(searchString)
-                                               || e.Description.Contains(searchString));
+                eventsQuery = eventsQuery.Where(e => e.Title.Contains(searchString));
             }
 
-            var eventsList = eventsQuery.ToList();
+            if (!String.IsNullOrEmpty(category))
+            {
+                eventsQuery = eventsQuery.Where(e => e.Category == category);
+            }
+
+            // Sorting Logic
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    eventsQuery = eventsQuery.OrderByDescending(e => e.Title);
+                    break;
+                case "Date":
+                    eventsQuery = eventsQuery.OrderBy(e => e.EventDateTime);
+                    break;
+                case "date_desc":
+                    eventsQuery = eventsQuery.OrderByDescending(e => e.EventDateTime);
+                    break;
+                default:
+                    eventsQuery = eventsQuery.OrderBy(e => e.Title);
+                    break;
+            }
+
+            // Get a list of unique category names for the filter buttons
+            ViewData["Categories"] = await _context.Events
+                                                .Where(e => e.Status == "Approved")
+                                                .Select(e => e.Category)
+                                                .Distinct()
+                                                .ToListAsync();
+
+            var eventsList = await eventsQuery.ToListAsync();
             return View(eventsList);
         }
 
@@ -130,7 +161,8 @@ namespace CollegeEventManagement.Controllers // Note: Your namespace might be di
                 EventFees = ev.Fees,
                 UserId = user.UserId,
                 UserFullName = user.FullName,
-                UserEmail = user.Email
+                UserEmail = user.Email,
+                UserCollegeName = user.CollegeName
             };
 
             return View(viewModel);
@@ -140,26 +172,31 @@ namespace CollegeEventManagement.Controllers // Note: Your namespace might be di
         [HttpPost]
         public async Task<IActionResult> Register(RegistrationViewModel viewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                // Repopulate details if validation fails
+                var ev = await _context.Events.FindAsync(viewModel.EventId);
+                var user = await _context.Users.FindAsync(viewModel.UserId);
+                viewModel.EventTitle = ev.Title;
+                viewModel.UserFullName = user.FullName;
+                viewModel.UserEmail = user.Email;
+                viewModel.UserCollegeName = user.CollegeName;
+                return View(viewModel);
+            }
+
             int? userId = HttpContext.Session.GetInt32("UserId");
             if (userId == null || userId.Value != viewModel.UserId)
             {
                 return Forbid();
             }
 
-            // Get event details with registrations
+            // Efficiently get event and registration count in one query
             var eventDetails = await _context.Events
                 .Include(e => e.Registrations)
                 .FirstOrDefaultAsync(e => e.EventId == viewModel.EventId);
 
-            if (eventDetails == null)
-            {
-                TempData["Notification"] = "The event does not exist.";
-                return RedirectToAction("Index", "Home");
-            }
-
             // 1. Check if already registered
-            bool isAlreadyRegistered = eventDetails.Registrations.Any(r => r.UserId == userId.Value);
-            if (isAlreadyRegistered)
+            if (eventDetails.Registrations.Any(r => r.UserId == userId.Value))
             {
                 TempData["Notification"] = "You are already registered for this event.";
                 return RedirectToAction("Details", new { id = viewModel.EventId });
@@ -168,17 +205,18 @@ namespace CollegeEventManagement.Controllers // Note: Your namespace might be di
             // 2. Check if the event is full
             if (eventDetails.Registrations.Count >= eventDetails.MaxParticipants)
             {
-                TempData["Notification"] = "Registration is closed because this event is full.";
+                TempData["Notification"] = "Registration failed because this event is now full.";
                 return RedirectToAction("Details", new { id = viewModel.EventId });
             }
 
-            // 3. Register the user
             var registration = new Registration
             {
-                UserId = userId.Value,
+                UserId = viewModel.UserId,
                 EventId = viewModel.EventId,
                 RegistrationDate = DateTime.Now,
-                Status = "Paid" // or "Pending" based on payment flow
+                Status = "Paid",
+                Semester = viewModel.Semester,
+                Branch = viewModel.Branch
             };
 
             _context.Registrations.Add(registration);
@@ -241,7 +279,7 @@ namespace CollegeEventManagement.Controllers // Note: Your namespace might be di
             }
 
             var myEvents = await _context.Events
-                .Where(e => e.CreatedBy == userId && e.Status == "Approved")
+                .Where(e => e.CreatedBy == userId)
                 .ToListAsync();
 
             return View(myEvents);

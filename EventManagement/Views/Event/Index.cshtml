@@ -1,83 +1,101 @@
-﻿@* @model IEnumerable<EventManagement.Models.Event>
+﻿@model IEnumerable<EventManagement.Models.Event>
 
 @{
     ViewData["Title"] = "Browse Events";
+    var categories = ViewData["Categories"] as List<string>;
 }
 
-<div class="container">
-    <h1 class="page-title">Upcoming Events</h1>
-
-    <form asp-action="Index" method="get" class="search-form">
-        <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" placeholder="Search by event title..." class="form-control" />
-        <button type="submit" class="btn btn-primary">Search</button>
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4">Upcoming Events</h1>
+        <p class="lead text-muted">Discover and join events hosted by our community.</p>
+    </div>
+    
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-8">
+            <form asp-action="Index" method="get">
+                <div class="input-group">
+                    <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" placeholder="Search events..." class="form-control" />
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                </div>
+            </form>
+        </div>
+        <div class="d-flex justify-content-center gap-2 mb-5">
+    <form asp-action="Index" method="get" id="sortForm">
+        <select name="sortOrder" class="form-select" onchange="this.form.submit()">
+            <option value="">Sort by Name</option>
+            <option value="Date">Sort by Date</option>
+        </select>
     </form>
+    
+    <div class="dropdown">
+        <button class="btn btn-outline-light dropdown-toggle" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            Filter by Category
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="categoryDropdown">
+            <li><a class="dropdown-item" asp-action="Index">All</a></li>
+            @if (categories != null)
+            {
+                @foreach (var cat in categories)
+                {
+                    <li><a class="dropdown-item" asp-action="Index" asp-route-category="@cat">@cat</a></li>
+                }
+            }
+        </ul>
+    </div>
+</div>
+    </div>
+
+    @* <div class="text-center mb-5">
+        <a asp-action="Index" class="btn btn-outline-light me-2">All</a>
+        @if (categories != null)
+        {
+            @foreach (var cat in categories)
+            {
+                <a asp-action="Index" asp-route-category="@cat" class="btn btn-outline-light me-2">@cat</a>
+            }
+        }
+    </div> *@
+
     <div class="event-grid">
         @foreach (var ev in Model)
         {
-            <a asp-action="Details" asp-route-id="@ev.EventId" class="event-card">
-                <div class="event-card-header">
-                    @* <img src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&q=80" alt="@ev.Title" /> *@
-                </div>
-                <div class="event-card-body">
-                    <p class="event-card-date">@ev.EventDateTime.ToString("dddd, dd MMMM yyyy")</p>
-                    <h5 class="event-card-title">@ev.Title</h5>
-                </div>
-                <div class="event-card-footer">
-                    <span>@(ev.Registrations?.Count() ?? 0) / @ev.MaxParticipants Spots</span>
-                    <span>View Details &rarr;</span>
+            <a asp-action="Details" asp-route-id="@ev.EventId" class="event-card-link">
+                <div class="event-card">
+                    <div class="event-card-body">
+                        <h5 class="event-card-title">@ev.Title</h5>
+                        <p class="event-card-date">@ev.EventDateTime.ToString("dddd, dd MMMM yyyy 'at' h:mm tt")</p>
+                        <p class="event-card-text">@ev.Description</p>
+                    </div>
+                    <div class="event-card-footer">
+                        <span>@(ev.Registrations?.Count() ?? 0) / @ev.MaxParticipants Spots Taken</span>
+                        <span class="view-details-prompt">View Details &rarr;</span>
+                    </div>
                 </div>
             </a>
         }
     </div>
-</div> *@
-
-                <div class="form-card">
-<h1>Create a New Event</h1>
-<form asp-action="Create" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-<div class="form-group">
-<label asp-for="Title">Event Title</label>
-<input asp-for="Title" class="form-control" placeholder="What is the name of your event?" required />
-                <span asp-validation-for="Title" class="text-danger"></span>
 </div>
 
-<div class="form-group">
-<label asp-for="Description">Description</label>
-<textarea asp-for="Description" class="form-control" placeholder="Tell us more about the event" rows="4"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('searchInput');
+            const eventGrid = document.getElementById('eventGrid');
+            const eventContainers = eventGrid.querySelectorAll('.event-container');
 
-            <!-- New Venue Field -->
-            <div class="form-group">
-                <label asp-for="Venue">Venue</label>
-                <input asp-for="Venue" class="form-control" placeholder="Where will this event take place?" required />
-                <span asp-validation-for="Venue" class="text-danger"></span>
-</div>
+            searchInput.addEventListener('keyup', function () {
+                const searchTerm = searchInput.value.toLowerCase();
 
-<div class="form-group">
-<label asp-for="EventDateTime">Date and Time</label>
-<input asp-for="EventDateTime" class="form-control" type="datetime-local" required />
-                <span asp-validation-for="EventDateTime" class="text-danger"></span>
-</div>
-
-<div class="form-group">
-<label asp-for="Fees">Registration Fee ($)</label>
-<input asp-for="Fees" class="form-control" type="number" step="0.01" placeholder="e.g., 5.00 or 0.00 for free" required />
-                <span asp-validation-for="Fees" class="text-danger"></span>
-</div>
-
-<div class="form-group">
-<label asp-for="MaxParticipants">Maximum Participants</label>
-<input asp-for="MaxParticipants" class="form-control" type="number" placeholder="e.g., 50" required />
-                <span asp-validation-for="MaxParticipants" class="text-danger"></span>
-</div>
-
-            <button type="submit" class="btn btn-primary" style="width:100%; padding-top: 1rem; padding-bottom: 1rem;">Create Event</button>
-            <button type="submit" class="btn btn-primary" style="width:100%; padding-top: 1rem; padding-bottom: 1rem;">
-                Create Event
-            </button>
-</form>
-</div>
-</div>
-</div>
+                eventContainers.forEach(container => {
+                    const title = container.querySelector('.event-title').textContent.toLowerCase();
+                    if (title.includes(searchTerm)) {
+                        container.style.display = 'block';
+                    } else {
+                        container.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+}

@@ -1,18 +1,12 @@
-﻿@using Microsoft.AspNetCore.Http
-@model EventManagement.Models.Event
+﻿@model EventManagement.Models.Event
 
 @{
     ViewData["Title"] = Model.Title;
     var spotsLeft = Model.MaxParticipants - Model.Registrations.Count();
 }
 
-<div class="container event-details-container">
-
-    @if (TempData["SuccessNotification"] != null)
-    {
-        <div class="alert alert-success">@TempData["SuccessNotification"]</div>
-    }
-
+<div class="container my-5">
+    
     @if (TempData["Notification"] != null)
     {
         <div class="alert alert-danger">@TempData["Notification"]</div>
@@ -21,20 +15,16 @@
     <div class="event-details-hero">
         <h1>@Model.Title</h1>
         <p>
-            <i class="fa-regular fa-calendar"></i>
-            @Model.EventDateTime.ToString("dddd, dd MMMM yyyy 'at' h:mm tt")
-        </p>
-        <p>
-            <i class="fa-solid fa-map-marker-alt"></i>
-            <strong>Venue:</strong> @Model.Venue
+            <i class="fa-regular fa-calendar"></i> @Model.EventDateTime.ToString("dddd, dd MMMM yyyy 'at' h:mm tt")
         </p>
     </div>
-
 
     <div class="event-details-body">
         <div class="event-details-main">
             <h2>About this Event</h2>
             <p>@Model.Description</p>
+            <h4 class="mt-4">Venue</h4>
+            <p>@Model.Venue</p>
         </div>
         <div class="event-details-sidebar">
             <div class="sidebar-card">
@@ -42,42 +32,25 @@
                 <p>@Model.Creator.FullName</p>
                 <hr />
                 <h3>Spots Left</h3>
-                <p>
-                    @if (spotsLeft > 0)
-                    {
-                        @($"{spotsLeft} of {Model.MaxParticipants}")
-                    }
-                    else
-                    {
-                        <span class="text-danger">Event is Full</span>
-                    }
-                </p>
+                <p>@spotsLeft of @Model.MaxParticipants</p>
                 <hr />
-
+                
                 @if (Context.Session.GetInt32("UserId") != null)
                 {
                     if (spotsLeft > 0)
                     {
-                        <!-- Register button enabled -->
-                        <a asp-action="Register" asp-route-id="@Model.EventId"
-                           class="btn btn-primary" style="width:100%;">
+                        <a asp-action="Register" asp-route-id="@Model.EventId" class="btn btn-primary w-100">
                             Register Now
                         </a>
                     }
                     else
                     {
-                        <!-- Register button disabled -->
-                        <button class="btn btn-secondary" style="width:100%;" disabled>
-                            Registration Closed
-                        </button>
+                        <button class="btn btn-secondary w-100" disabled>Sold Out</button>
                     }
                 }
                 else
                 {
-                    <a asp-controller="Account" asp-action="Login"
-                       class="btn btn-primary" style="width:100%;">
-                        Login to Register
-                    </a>
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-primary w-100">Login to Register</a>
                 }
             </div>
         </div>

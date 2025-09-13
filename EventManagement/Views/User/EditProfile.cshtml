@@ -4,22 +4,38 @@
     ViewData["Title"] = "Edit Profile";
 }
 
-<div class="container">
-    <div class="form-card" style="max-width: 600px; margin-top: 2rem;">
-        <h1>Edit Profile</h1>
-        <form asp-action="EditProfile" method="post">
-            <div class="form-group">
-                <label asp-for="FullName"></label>
-                <input asp-for="FullName" class="form-control" />
-                <span asp-validation-for="FullName" class="validation-error"></span>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card bg-dark text-white">
+                <div class="card-body p-4">
+                    <h1 class="card-title text-center mb-4">Edit Profile</h1>
+                    <form asp-action="EditProfile" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label asp-for="FullName" class="form-label"></label>
+                            <input asp-for="FullName" class="form-control" />
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="CollegeName" class="form-label"></label>
+                            <input asp-for="CollegeName" class="form-control" placeholder="Your college or university name" />
+                            <span asp-validation-for="CollegeName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="ProfileImage" class="form-label"></label>
+                            <input asp-for="ProfileImage" class="form-control" type="file" accept="image/*" />
+                            <span asp-validation-for="ProfileImage" class="text-danger"></span>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="ProfilePictureUrl"></label>
-                <input asp-for="ProfilePictureUrl" class="form-control" placeholder="http://... or leave blank" />
-                <span asp-validation-for="ProfilePictureUrl" class="validation-error"></span>
-            </div>
-
-            <button type="submit" class="btn btn-primary" style="width:100%; margin-top: 1.5rem;">Save Changes</button>
-        </form>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

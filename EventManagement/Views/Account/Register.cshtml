@@ -38,9 +38,10 @@
 
                 <div class="input-group">
                     <input type="password" asp-for="Password" class="form-control" placeholder="Password" required />
-                    <i class="fa-solid fa-lock"></i>
+                        <i class="fa-solid fa-lock form-icon left-icon"></i>
+                        <i class="fa-solid fa-eye-slash form-icon right-icon" id="togglePassword"></i>
                 </div>
-                <span asp-validation-for="Password" class="validation-error"></span>
+                <span asp-validation-for="Password" class="validation-error"></span><br>
 
                 <button type="submit" class="btn btn-primary" style="width:100%; margin-top: 1rem;">Sign Up</button>
             </form>
@@ -50,5 +51,19 @@
             </p>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const togglePassword = document.querySelector('#togglePassword');
+            if (togglePassword) {
+                togglePassword.addEventListener('click', function () {
+                    const passwordInput = document.querySelector('#Password');
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    this.classList.toggle('fa-eye-slash');
+                    this.classList.toggle('fa-eye');
+                });
+            }
+        });
+    </script>
 </body>
 </html>

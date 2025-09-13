@@ -4,47 +4,32 @@
     ViewData["Title"] = "User Management";
 }
 
-<div class="container">
-    <div class="form-card" style="max-width: 900px; margin-top: 2rem;">
-        <h1 style="text-align:center;">User Management</h1>
-        <p style="text-align:center; color: var(--text-secondary);">Promote students to Event Coordinators or demote them back to students.</p>
-
-        <table class="table" style="margin-top: 2rem; color: var(--text-primary);">
-            <thead>
-                <tr>
-                    <th>Full Name</th>
-                    <th>Email</th>
-                    <th>Current Role</th>
-                    <th style="text-align:right;">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var user in Model)
-                {
+<div class="container my-5">
+    <div class="card bg-dark text-white">
+        <div class="card-body">
+            <h1 class="card-title text-center mb-4">User Management</h1>
+            <table class="table table-dark table-striped table-hover">
+                <thead>
                     <tr>
-                        <td>@user.FullName</td>
-                        <td>@user.Email</td>
-                        <td>@user.Role</td>
-                        <td style="text-align:right;">
-                            @if (user.Role == "Student")
-                            {
-                                <form asp-action="PromoteToCoordinator" method="post" style="display:inline;">
-                                    <input type="hidden" name="userId" value="@user.UserId" />
-                                    <button type="submit" class="btn btn-primary" style="padding: 0.4rem 0.8rem;">Promote</button>
-                                </form>
-                            }
-                            else if (user.Role == "Event-Coordinator")
-                            {
-                                <form asp-action="DemoteToStudent" method="post" style="display:inline;">
-                                    <input type="hidden" name="userId" value="@user.UserId" />
-                                    <button type="submit" class="btn btn-secondary" style="padding: 0.4rem 0.8rem;">Demote</button>
-                                </form>
-                            }
-                        </td>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Current Role</th>
+                        <th>Actions</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td>@user.FullName</td>
+                            <td>@user.Email</td>
+                            <td>@user.Role</td>
+                            <td>
+                                </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
-@* Add some basic table styling to site.css if needed *@

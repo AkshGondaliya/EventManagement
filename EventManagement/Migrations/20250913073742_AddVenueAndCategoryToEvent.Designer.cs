@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventManagement.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250913061118_third")]
-    partial class third
+    [Migration("20250913073742_AddVenueAndCategoryToEvent")]
+    partial class AddVenueAndCategoryToEvent
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,10 +28,16 @@ namespace EventManagement.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("EventDateTime")
@@ -47,10 +53,13 @@ namespace EventManagement.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Venue")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
 
                     b.HasKey("EventId");
 
@@ -125,7 +134,7 @@ namespace EventManagement.Migrations
                             UserId = 100,
                             Email = "admin@college.edu",
                             FullName = "System Admin",
-                            PasswordHash = "$2b$10$UG9etNMcvDmMK47BqsDQl.DFxuCKrCQrfMc4VlvoLoefWhvwnAqSu",
+                            PasswordHash = "$2b$10$kpZgnegpH.aREMA0YJOYC.GpYtzueUQNw.P0EhR0kTbpS/GIsRYWq",
                             Role = "Admin"
                         });
                 });

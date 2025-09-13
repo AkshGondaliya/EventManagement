@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventManagement.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250913044211_second")]
-    partial class second
+    [Migration("20250913072614_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,6 +32,7 @@ namespace EventManagement.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("EventDateTime")
@@ -47,7 +48,13 @@ namespace EventManagement.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Venue")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
 
                     b.HasKey("EventId");
 
@@ -91,6 +98,9 @@ namespace EventManagement.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("CollegeName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -119,7 +129,7 @@ namespace EventManagement.Migrations
                             UserId = 100,
                             Email = "admin@college.edu",
                             FullName = "System Admin",
-                            PasswordHash = "$2b$10$CpI1W9UaWPgJcO6iLuBXbuAD.HTQyT55M/FjN8DsI5ftmqQA0IM4C",
+                            PasswordHash = "$2b$10$caFooPEPJgGZqpTj.m.4VuR3Ph35IQN5wXM4ClsIxqVPonNG26GVK",
                             Role = "Admin"
                         });
                 });
@@ -129,7 +139,7 @@ namespace EventManagement.Migrations
                     b.HasOne("EventManagement.Models.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -138,13 +148,13 @@ namespace EventManagement.Migrations
                     b.HasOne("EventManagement.Models.Event", "Event")
                         .WithMany("Registrations")
                         .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("EventManagement.Models.User", "User")
                         .WithMany("Registrations")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

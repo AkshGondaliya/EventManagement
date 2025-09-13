@@ -4,33 +4,36 @@
     ViewData["Title"] = "My Events";
 }
 
-<div class="container">
-    <div class="form-card" style="max-width: 900px; margin-top: 2rem;">
-        <h1 style="text-align:center;">My Approved Events</h1>
-        <p style="text-align:center; color: var(--text-secondary);">Here are the events you created that have been approved.</p>
-
-        <table class="table" style="margin-top: 2rem; color: var(--text-primary);">
-            <thead>
-                <tr>
-                    <th>Event Title</th>
-                    <th>Event Date</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var ev in Model)
-                {
+<div class="container my-5">
+    <div class="card bg-dark text-white">
+        <div class="card-body">
+            <h1 class="card-title text-center mb-4">My Events</h1>
+            <table class="table table-dark table-striped table-hover">
+                <thead>
                     <tr>
-                        <td>@ev.Title</td>
-                        <td>@ev.EventDateTime.ToString("g")</td>
-                        <td><span class="status-approved">@ev.Status</span></td>
-                        <td>
-                            <a asp-action="ViewRegistrations" asp-route-id="@ev.EventId" class="btn btn-secondary" style="padding: 0.4rem 0.8rem;">View Registrations</a>
-                        </td>
+                        <th>Event Title</th>
+                        <th>Event Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var ev in Model)
+                    {
+                        <tr>
+                            <td>@ev.Title</td>
+                            <td>@ev.EventDateTime.ToString("g")</td>
+                            <td>@ev.Status</td>
+                            <td>
+                                @if(ev.Status == "Approved")
+                                {
+                                    <a asp-action="ViewRegistrations" asp-route-id="@ev.EventId" class="btn btn-sm btn-outline-light">View Registrations</a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

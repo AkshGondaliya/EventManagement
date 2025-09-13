@@ -17,7 +17,8 @@ namespace EventManagement.Migrations
                     Email = table.Column<string>(nullable: false),
                     PasswordHash = table.Column<string>(nullable: true),
                     Role = table.Column<string>(nullable: true),
-                    ProfilePictureUrl = table.Column<string>(nullable: true)
+                    ProfilePictureUrl = table.Column<string>(nullable: true),
+                    CollegeName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -30,10 +31,11 @@ namespace EventManagement.Migrations
                 {
                     EventId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
+                    Title = table.Column<string>(nullable: false),
+                    Description = table.Column<string>(nullable: false),
                     EventDateTime = table.Column<DateTime>(nullable: false),
                     MaxParticipants = table.Column<int>(nullable: false),
+                    Venue = table.Column<string>(maxLength: 100, nullable: false),
                     Status = table.Column<string>(nullable: true),
                     Fees = table.Column<decimal>(type: "decimal(18, 2)", nullable: false),
                     CreatedBy = table.Column<int>(nullable: false)
@@ -45,8 +47,7 @@ namespace EventManagement.Migrations
                         name: "FK_Events_Users_CreatedBy",
                         column: x => x.CreatedBy,
                         principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -67,15 +68,18 @@ namespace EventManagement.Migrations
                         name: "FK_Registrations_Events_EventId",
                         column: x => x.EventId,
                         principalTable: "Events",
-                        principalColumn: "EventId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "EventId");
                     table.ForeignKey(
                         name: "FK_Registrations_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "UserId");
                 });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "UserId", "CollegeName", "Email", "FullName", "PasswordHash", "ProfilePictureUrl", "Role" },
+                values: new object[] { 100, null, "admin@college.edu", "System Admin", "$2b$10$caFooPEPJgGZqpTj.m.4VuR3Ph35IQN5wXM4ClsIxqVPonNG26GVK", null, "Admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Events_CreatedBy",

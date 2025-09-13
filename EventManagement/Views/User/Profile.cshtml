@@ -4,28 +4,30 @@
     ViewData["Title"] = "My Profile";
 }
 
-<div class="container">
-    <div class="form-card" style="max-width: 600px; margin-top: 2rem;">
-        <div class="profile-header">
-            <img src="@(Model.ProfilePictureUrl ?? "/images/default-avatar.png")" class="profile-avatar" alt="Profile Picture" />
-            <h1>My Profile</h1>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card bg-dark text-white">
+                <div class="card-body text-center">
+                    <img src="@(Model.ProfilePictureUrl ?? "/images/default-avatar.png")" class="profile-avatar mb-3" alt="Profile Picture"/>
+                    <h1 class="card-title">@Model.FullName</h1>
+                    <p class="text-muted">@Model.Email</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item bg-dark text-white d-flex justify-content-between">
+                        <strong>Role</strong>
+                        <span>@Model.Role</span>
+                    </li>
+                    <li class="list-group-item bg-dark text-white d-flex justify-content-between">
+                        <strong>College</strong>
+                        <span>@(Model.CollegeName ?? "Not specified")</span>
+                    </li>
+                </ul>
+                <div class="card-body d-grid gap-2">
+                    <a asp-action="EditProfile" class="btn btn-primary">Edit Profile</a>
+                    <a asp-action="ChangePassword" class="btn btn-outline-light">Change Password</a>
+                </div>
+            </div>
         </div>
-
-        <div class="profile-details">
-            <div class="detail-item">
-                <label>Full Name</label>
-                <span>@Model.FullName</span>
-            </div>
-            <div class="detail-item">
-                <label>Email Address</label>
-                <span>@Model.Email</span>
-            </div>
-            <div class="detail-item">
-                <label>Role</label>
-                <span>@Model.Role</span>
-            </div>
-        </div>
-
-        <a asp-action="EditProfile" class="btn btn-secondary" style="width:100%; margin-top: 1.5rem;">Edit Profile</a>
     </div>
 </div>

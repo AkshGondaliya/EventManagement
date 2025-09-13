@@ -22,7 +22,11 @@ namespace EventManagement.Models
         public int MaxParticipants { get; set; }
         [Required(ErrorMessage = "Venue is required")]
         [StringLength(100, ErrorMessage = "Venue cannot exceed 100 characters")]
-        public string Venue { get; set; }  // <-- Added Venue Field
+        public string Venue { get; set; }
+
+        [Required(ErrorMessage = "Category is required")]
+        [StringLength(50)]
+        public string Category { get; set; }
 
 
         public string Status { get; set; }
