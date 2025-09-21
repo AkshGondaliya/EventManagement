@@ -24,10 +24,18 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="QRCoder" Version="1.6.0" />
+    <PackageReference Include="QuestPDF" Version="2025.7.1" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\uploads\avatars\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="wkhtmltopdf\libwkhtmltox.dll">
+      <CopyToOutputDirectory>Copy always </CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -1,3 +1,4 @@
+
 using EventManagement.Data;
 using EventManagement.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -9,16 +10,20 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace EventManagement
 {
+    
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IWebHostEnvironment _env;  
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            _env = env; // Store it
         }
 
         public IConfiguration Configuration { get; }
@@ -29,6 +34,7 @@ namespace EventManagement
             services.AddControllersWithViews();
             services.AddSession();
             services.AddHttpContextAccessor();
+            QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
 
             // Register AutoMapper
@@ -68,7 +74,7 @@ namespace EventManagement
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Account}/{action=Register}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

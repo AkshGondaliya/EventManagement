@@ -25,6 +25,7 @@
                             <td>@reg.Event.EventDateTime.ToString("g")</td>
                             <td>@reg.RegistrationDate.ToString("g")</td>
                             <td>
+                                <a asp-action="ViewTicket" asp-route-id="@reg.RegistrationId" class="btn btn-sm btn-primary" target="_blank">View Ticket</a>
                                 <form asp-action="CancelRegistration" method="post">
                                     <input type="hidden" name="registrationId" value="@reg.RegistrationId" />
                                     <button type="submit" class="btn btn-sm btn-danger">Cancel</button>

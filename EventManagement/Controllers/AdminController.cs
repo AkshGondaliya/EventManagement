@@ -115,5 +115,31 @@ namespace EventManagement.Controllers
 
             return View(myEvents);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteUser(int userId)
+        {
+            if (!IsAdmin())
+            {
+                return Forbid();
+            }
+
+            var user = await _context.Users.FindAsync(userId);
+            if (user != null)
+            {
+                // Important: You might need to handle related data first,
+                // like deleting registrations associated with this user.
+                // For now, we will assume the database handles it or there are none.
+                _context.Users.Remove(user);
+                await _context.SaveChangesAsync();
+                TempData["SuccessNotification"] = "User successfully deleted.";
+            }
+            else
+            {
+                TempData["Notification"] = "User not found.";
+            }
+
+            return RedirectToAction("UserManagement");
+        }
     }
 }

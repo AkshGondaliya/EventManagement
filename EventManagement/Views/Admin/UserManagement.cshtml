@@ -14,7 +14,7 @@
                         <th>Full Name</th>
                         <th>Email</th>
                         <th>Current Role</th>
-                        <th>Actions</th>
+                        <th class="text-end">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -24,8 +24,12 @@
                             <td>@user.FullName</td>
                             <td>@user.Email</td>
                             <td>@user.Role</td>
-                            <td>
-                                </td>
+                            <td class="text-end">
+                                <form asp-action="DeleteUser" method="post" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                    <input type="hidden" name="userId" value="@user.UserId" />
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </td>
                         </tr>
                     }
                 </tbody>

@@ -1,10 +1,17 @@
-﻿using EventManagement.Data;
+﻿using EventManagement.Documents;
+using QuestPDF.Fluent;
+using EventManagement.Data;
 using EventManagement.Models;
 using EventManagement.ViewModels; // Add this using statement
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
+using QRCoder;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -226,6 +233,109 @@ namespace CollegeEventManagement.Controllers // Note: Your namespace might be di
             return RedirectToAction("MyRegistrations");
         }
 
+        public async Task<IActionResult> ViewTicket(int id)
+        {
+            int? userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var registration = await _context.Registrations
+                .Include(r => r.Event)
+                .Include(r => r.User)
+                .FirstOrDefaultAsync(r => r.RegistrationId == id);
+
+            // Security check: Ensure the ticket belongs to the logged-in user
+            if (registration == null || registration.UserId != userId)
+            {
+                return NotFound();
+            }
+
+            // --- QR Code Generation Logic ---
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            // The data can be a simple ID or a URL to a validation page
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode($"RegID:{registration.RegistrationId}", QRCodeGenerator.ECCLevel.Q);
+            PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
+            byte[] qrCodeImageBytes = qrCode.GetGraphic(20);
+            string qrCodeImageUrl = "data:image/png;base64," + Convert.ToBase64String(qrCodeImageBytes);
+            // --- End of QR Code Logic ---
+
+            var viewModel = new ViewTicketViewModel
+            {
+                RegistrationId = registration.RegistrationId,
+                EventTitle = registration.Event.Title,
+                AttendeeName = registration.User.FullName,
+                EventDate = registration.Event.EventDateTime,
+                Venue = registration.Event.Venue,
+                QrCodeImageUrl = qrCodeImageUrl // Pass the generated image URL to the view
+            };
+
+            return View(viewModel);
+        }
+
+        public async Task<IActionResult> DownloadTicket(int id)
+        {
+            // 1. Fetch the data
+            var registration = await _context.Registrations
+                .Include(r => r.Event)
+                .Include(r => r.User)
+                .FirstOrDefaultAsync(r => r.RegistrationId == id);
+
+            if (registration == null) return NotFound();
+
+            // --- QR Code Generation Logic ---
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            // The data can be a simple ID or a URL to a validation page
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode($"RegID:{registration.RegistrationId}", QRCodeGenerator.ECCLevel.Q);
+            PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
+            byte[] qrCodeImageBytes = qrCode.GetGraphic(20);
+            string qrCodeImageUrl = "data:image/png;base64," + Convert.ToBase64String(qrCodeImageBytes);
+            // --- End of QR Code Logic ---
+
+            var viewModel = new ViewTicketViewModel
+            {
+                RegistrationId = registration.RegistrationId,
+                EventTitle = registration.Event.Title,
+                AttendeeName = registration.User.FullName,
+                EventDate = registration.Event.EventDateTime,
+                Venue = registration.Event.Venue,
+                QrCodeImageUrl = qrCodeImageUrl // Pass the generated image URL to the view
+            };
+
+            // Generate the PDF
+            var document = new TicketDocument(viewModel);
+            var pdfBytes = document.GeneratePdf();
+
+            return File(pdfBytes, "application/pdf", $"Ticket_{viewModel.EventTitle}.pdf");
+        }
+
+        // ADD THIS HELPER METHOD at the bottom of the controller
+        private async Task<string> RenderViewToStringAsync(string viewName, object model)
+        {
+            ViewData.Model = model;
+            using (var sw = new StringWriter())
+            {
+                var viewEngine = HttpContext.RequestServices.GetService(typeof(ICompositeViewEngine)) as ICompositeViewEngine;
+                var viewResult = viewEngine.FindView(ControllerContext, viewName, false);
+
+                if (viewResult.View == null)
+                {
+                    throw new ArgumentNullException($"{viewName} does not match any available view");
+                }
+
+                var viewContext = new ViewContext(
+                    ControllerContext,
+                    viewResult.View,
+                    ViewData,
+                    TempData,
+                    sw,
+                    new HtmlHelperOptions()
+                );
+                await viewResult.View.RenderAsync(viewContext);
+                return sw.ToString();
+            }
+        }
 
         [HttpPost]
         public async Task<IActionResult> CancelRegistration(int registrationId)

@@ -139,5 +139,7 @@ namespace EventManagement.Controllers
             TempData["SuccessNotification"] = "Your password has been changed successfully.";
             return RedirectToAction("Profile");
         }
+
+
     }
 }
