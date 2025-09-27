@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EventManagement.Migrations
 {
-    public partial class AddNotificationTable : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -101,7 +101,7 @@ namespace EventManagement.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "UserId", "CollegeName", "Email", "FullName", "PasswordHash", "ProfilePictureUrl", "Role" },
-                values: new object[] { 100, null, "admin@college.edu", "System Admin", "$2b$10$ZIEJcWpMFAhlasBNiGpRWOlwB0cfsd17rYZpDL6RKrv/PWnCwPYYu", null, "Admin" });
+                values: new object[] { 100, null, "admin@college.edu", "System Admin", "$2b$10$0JygYc8yvwwA3CJ1LH69iuF7woaIGiYiTbfTzzAl3HX7O4TwqF/ky", null, "Admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Events_CreatedBy",
