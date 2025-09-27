@@ -1,4 +1,5 @@
 ﻿using EventManagement.Data;
+using System.Threading.Tasks;
 namespace EventManagement.Repositories
 {
     public class UnitOfWork : IUnitOfWork
@@ -13,9 +14,10 @@ namespace EventManagement.Repositories
             Users = new UserRepository(context);
         }
 
-        public void Save()
+
+        public async Task SaveAsync()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 
