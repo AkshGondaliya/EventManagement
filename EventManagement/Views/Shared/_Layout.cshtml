@@ -44,7 +44,11 @@
                         {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <img src="@(HttpContextAccessor.HttpContext.Session.GetString("ProfilePictureUrl") ?? "/images/default-avatar.png")" class="navbar-avatar" alt="User Avatar" />
+                                    @{
+                                        var profilePic = HttpContextAccessor.HttpContext.Session.GetString("ProfilePictureUrl");
+                                        var avatarSrc = string.IsNullOrEmpty(profilePic) ? "/images/default-avatar.png" : profilePic;
+                                    }
+                                    <img src="@avatarSrc" class="navbar-avatar" alt="User Avatar" />
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="navbarDropdown">
                                     <li><a class="dropdown-item" asp-controller="User" asp-action="Profile">Profile</a></li>

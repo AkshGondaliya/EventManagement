@@ -3,6 +3,7 @@ using EventManagement.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -13,10 +14,14 @@ namespace EventManagement.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment; // for profileImage Upload
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(AppDbContext context)
+
+        public UserController(AppDbContext context, IWebHostEnvironment webHostEnvironment, ILogger<UserController> logger)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
+            _logger = logger;
         }
 
         // GET: /User/Profile
@@ -69,32 +74,60 @@ namespace EventManagement.Controllers
             }
 
             int? userId = HttpContext.Session.GetInt32("UserId");
-            var user = await _context.Users.FindAsync(userId.Value);
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
 
+            var user = await _context.Users.FindAsync(userId.Value);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Handle the file upload
             if (viewModel.ProfileImage != null)
             {
+                // Store the path of the old image before updating it
+                string oldImagePath = user.ProfilePictureUrl;
+
+                // Save the new image
                 string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads/avatars");
                 string uniqueFileName = Guid.NewGuid().ToString() + "_" + viewModel.ProfileImage.FileName;
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                string newFilePath = Path.Combine(uploadsFolder, uniqueFileName);
 
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                using (var fileStream = new FileStream(newFilePath, FileMode.Create))
                 {
                     await viewModel.ProfileImage.CopyToAsync(fileStream);
                 }
+
+                // Update the user's record with the new path
                 user.ProfilePictureUrl = "/uploads/avatars/" + uniqueFileName;
-                HttpContext.Session.SetString("ProfilePictureUrl", user.ProfilePictureUrl);
+
+                // If an old image existed, delete the old file from the server
+                if (!string.IsNullOrEmpty(oldImagePath))
+                {
+                    string oldAbsoluteImagePath = Path.Combine(_webHostEnvironment.WebRootPath, oldImagePath.TrimStart('/'));
+                    if (System.IO.File.Exists(oldAbsoluteImagePath))
+                    {
+                        System.IO.File.Delete(oldAbsoluteImagePath);
+                    }
+                }
             }
 
+            // Update other user properties
             user.FullName = viewModel.FullName;
             user.CollegeName = viewModel.CollegeName;
-
             _context.Update(user);
             await _context.SaveChangesAsync();
 
+            // Update session with new details
             HttpContext.Session.SetString("FullName", user.FullName);
+            HttpContext.Session.SetString("ProfilePictureUrl", user.ProfilePictureUrl ?? "");
 
             return RedirectToAction("Profile");
         }
+
 
 
         // GET: /User/ChangePassword
