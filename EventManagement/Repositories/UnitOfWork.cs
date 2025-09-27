@@ -7,11 +7,13 @@ namespace EventManagement.Repositories
         private readonly AppDbContext _context;
 
         public IUserRepository Users { get; }
+        public IEventRepository Events { get; }
 
         public UnitOfWork(AppDbContext context)
         {
             _context = context;
             Users = new UserRepository(context);
+            Events = new EventRepository(context);
         }
 
 

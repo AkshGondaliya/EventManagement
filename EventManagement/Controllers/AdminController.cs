@@ -53,6 +53,26 @@ namespace EventManagement.Controllers
             return View(pendingEvents);
         }
 
+        // GET: /Admin/EventApprovalDetails/5
+        public async Task<IActionResult> EventApprovalDetails(int id)
+        {
+            if (!IsAdmin())
+            {
+                return Forbid();
+            }
+
+            var eventDetails = await _context.Events
+                                             .Include(e => e.Creator)
+                                             .FirstOrDefaultAsync(e => e.EventId == id);
+
+            if (eventDetails == null || eventDetails.Status != "Pending")
+            {
+                return NotFound();
+            }
+
+            return View(eventDetails);
+        }
+
         // POST: /Admin/ApproveEvent
         [HttpPost]
         public async Task<IActionResult> ApproveEvent(int eventId)

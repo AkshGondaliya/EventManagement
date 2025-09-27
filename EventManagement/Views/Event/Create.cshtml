@@ -1,6 +1,9 @@
 ﻿@model EventManagement.Models.Event
 @{
-    ViewData["Title"] = "Request a New Event";
+    var userRole = Context.Session.GetString("Role");
+    var pageTitle = userRole == "Admin" ? "Create a New Event" : "Request a New Event";
+    var buttonText = userRole == "Admin" ? "Create Event" : "Submit for Approval";
+    ViewData["Title"] = pageTitle;
 }
 
 <div class="container my-5">
@@ -48,7 +51,7 @@
                             <span asp-validation-for="Fees" class="text-danger"></span>
                         </div>
                         <div class="d-grid">
-                             <button type="submit" class="btn btn-primary btn-lg mt-3">Submit for Approval</button>
+                            <button type="submit" class="btn btn-primary btn-lg mt-3">@buttonText</button>
                         </div>
                     </form>
                 </div>

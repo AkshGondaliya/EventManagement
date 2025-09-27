@@ -8,7 +8,7 @@
     var userId = HttpContextAccessor.HttpContext.Session.GetInt32("UserId");
     if (userId != null)
     {
-        showMyEventsLink = DbContext.Events.Any(e => e.CreatedBy == userId && e.Status == "Approved");
+        showMyEventsLink = DbContext.Events.Any(e => e.CreatedBy == userId);
     }
 }
 
