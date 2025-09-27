@@ -3,10 +3,11 @@
 @{
     ViewData["Title"] = Model.Title;
     var spotsLeft = Model.MaxParticipants - Model.Registrations.Count();
+    var isEventOver = Model.EventDateTime < DateTime.Now; // Check if the event is over
 }
 
 <div class="container my-5">
-    
+
     @if (TempData["Notification"] != null)
     {
         <div class="alert alert-danger">@TempData["Notification"]</div>
@@ -15,7 +16,8 @@
     <div class="event-details-hero">
         <h1>@Model.Title</h1>
         <p>
-            <i class="fa-regular fa-calendar"></i> @Model.EventDateTime.ToString("dddd, dd MMMM yyyy 'at' h:mm tt")
+            <i class="fa-regular fa-calendar"></i>
+            @Model.EventDateTime.ToString("dddd, dd MMMM yyyy 'at' h:mm tt")
         </p>
     </div>
 
@@ -23,6 +25,7 @@
         <div class="event-details-main">
             <h2>About this Event</h2>
             <p>@Model.Description</p>
+
             <h4 class="mt-4">Venue</h4>
             <p>@Model.Venue</p>
         </div>
@@ -34,8 +37,13 @@
                 <h3>Spots Left</h3>
                 <p>@spotsLeft of @Model.MaxParticipants</p>
                 <hr />
-                
-                @if (Context.Session.GetInt32("UserId") != null)
+
+                @if (isEventOver)
+                {
+                    <!-- If the event date has passed -->
+                    <button class="btn btn-danger w-100" disabled>Event Over</button>
+                }
+                else if (Context.Session.GetInt32("UserId") != null)
                 {
                     if (spotsLeft > 0)
                     {

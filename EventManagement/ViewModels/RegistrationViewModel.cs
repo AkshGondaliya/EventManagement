@@ -23,7 +23,6 @@ namespace EventManagement.ViewModels
         [StringLength(50)]
         public string Branch { get; set; }
 
-        [Required(ErrorMessage = "Please select a payment method.")]
         public string PaymentMethod { get; set; }
     }
 }

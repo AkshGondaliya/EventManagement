@@ -66,6 +66,30 @@ namespace EventManagement.Migrations
                     b.ToTable("Events");
                 });
 
+            modelBuilder.Entity("EventManagement.Models.Notification", b =>
+                {
+                    b.Property<int>("NotificationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("NotificationId");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("EventManagement.Models.Registration", b =>
                 {
                     b.Property<int>("RegistrationId")
@@ -140,7 +164,7 @@ namespace EventManagement.Migrations
                             UserId = 100,
                             Email = "admin@college.edu",
                             FullName = "System Admin",
-                            PasswordHash = "$2b$10$8CdJjrhV2QbPmEIMFKs8b.jbN6dmW74LYNR3kKngoUCLXExJ5jm32",
+                            PasswordHash = "$2b$10$ZIEJcWpMFAhlasBNiGpRWOlwB0cfsd17rYZpDL6RKrv/PWnCwPYYu",
                             Role = "Admin"
                         });
                 });

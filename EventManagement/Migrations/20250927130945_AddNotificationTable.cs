@@ -3,10 +3,26 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EventManagement.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class AddNotificationTable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Notifications",
+                columns: table => new
+                {
+                    NotificationId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(nullable: false),
+                    Message = table.Column<string>(nullable: true),
+                    IsRead = table.Column<bool>(nullable: false),
+                    CreatedAt = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notifications", x => x.NotificationId);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
@@ -36,6 +52,7 @@ namespace EventManagement.Migrations
                     EventDateTime = table.Column<DateTime>(nullable: false),
                     MaxParticipants = table.Column<int>(nullable: false),
                     Venue = table.Column<string>(maxLength: 100, nullable: false),
+                    Category = table.Column<string>(maxLength: 50, nullable: false),
                     Status = table.Column<string>(nullable: true),
                     Fees = table.Column<decimal>(type: "decimal(18, 2)", nullable: false),
                     CreatedBy = table.Column<int>(nullable: false)
@@ -47,7 +64,8 @@ namespace EventManagement.Migrations
                         name: "FK_Events_Users_CreatedBy",
                         column: x => x.CreatedBy,
                         principalTable: "Users",
-                        principalColumn: "UserId");
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -59,7 +77,9 @@ namespace EventManagement.Migrations
                     UserId = table.Column<int>(nullable: false),
                     EventId = table.Column<int>(nullable: false),
                     RegistrationDate = table.Column<DateTime>(nullable: false),
-                    Status = table.Column<string>(nullable: true)
+                    Status = table.Column<string>(nullable: true),
+                    Semester = table.Column<string>(maxLength: 50, nullable: true),
+                    Branch = table.Column<string>(maxLength: 50, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -68,18 +88,20 @@ namespace EventManagement.Migrations
                         name: "FK_Registrations_Events_EventId",
                         column: x => x.EventId,
                         principalTable: "Events",
-                        principalColumn: "EventId");
+                        principalColumn: "EventId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Registrations_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "UserId");
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "UserId", "CollegeName", "Email", "FullName", "PasswordHash", "ProfilePictureUrl", "Role" },
-                values: new object[] { 100, null, "admin@college.edu", "System Admin", "$2b$10$caFooPEPJgGZqpTj.m.4VuR3Ph35IQN5wXM4ClsIxqVPonNG26GVK", null, "Admin" });
+                values: new object[] { 100, null, "admin@college.edu", "System Admin", "$2b$10$ZIEJcWpMFAhlasBNiGpRWOlwB0cfsd17rYZpDL6RKrv/PWnCwPYYu", null, "Admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Events_CreatedBy",
@@ -99,6 +121,9 @@ namespace EventManagement.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Notifications");
+
             migrationBuilder.DropTable(
                 name: "Registrations");
 
