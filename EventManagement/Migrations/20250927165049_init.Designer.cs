@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventManagement.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250927130945_AddNotificationTable")]
-    partial class AddNotificationTable
+    [Migration("20250927165049_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -166,7 +166,7 @@ namespace EventManagement.Migrations
                             UserId = 100,
                             Email = "admin@college.edu",
                             FullName = "System Admin",
-                            PasswordHash = "$2b$10$ZIEJcWpMFAhlasBNiGpRWOlwB0cfsd17rYZpDL6RKrv/PWnCwPYYu",
+                            PasswordHash = "$2b$10$0JygYc8yvwwA3CJ1LH69iuF7woaIGiYiTbfTzzAl3HX7O4TwqF/ky",
                             Role = "Admin"
                         });
                 });
