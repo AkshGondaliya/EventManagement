@@ -1,0 +1,39 @@
+﻿@* For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860 *@
+@model EventManagement.Models.Event
+
+@{
+    ViewData["Title"] = "Approve Event";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card bg-dark text-white">
+                <div class="card-body">
+                    <h1 class="card-title">@Model.Title</h1>
+                    <h6 class="card-subtitle mb-2 text-muted">Requested by: @Model.Creator.FullName</h6>
+                    <hr>
+                    <p><strong>Date & Time:</strong> @Model.EventDateTime.ToString("f")</p>
+                    <p><strong>Venue:</strong> @Model.Venue</p>
+                    <p><strong>Category:</strong> @Model.Category</p>
+                    <p><strong>Max Participants:</strong> @Model.MaxParticipants</p>
+                    <p><strong>Fee:</strong> $@Model.Fees.ToString("F2")</p>
+                    <hr>
+                    <p><strong>Description:</strong></p>
+                    <p>@Model.Description</p>
+                    <hr>
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <form asp-action="ApproveEvent" method="post">
+                            <input type="hidden" name="eventId" value="@Model.EventId" />
+                            <button type="submit" class="btn btn-success">Approve</button>
+                        </form>
+                        <form asp-action="RejectEvent" method="post">
+                            <input type="hidden" name="eventId" value="@Model.EventId" />
+                            <button type="submit" class="btn btn-danger">Reject</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
