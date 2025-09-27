@@ -1,6 +1,6 @@
-﻿@*
+﻿@* 
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+
 @model EventManagement.ViewModels.RegistrationViewModel
 
 @{
@@ -46,8 +46,7 @@
     </div>
 
     <div class="mb-3">
-        @if (Model.EventFees > 0)
-        {
+        
                     <label asp-for="PaymentMethod" class="form-label"></label>
                     <select asp-for="PaymentMethod" class="form-select">
                         <option value="">-- Select a Method --</option>
@@ -56,7 +55,7 @@
                         <option value="CollegeWallet">College Wallet</option>
                     </select>
                     <span asp-validation-for="PaymentMethod" class="text-danger"></span>
-        }
+        
         
     </div>
     
@@ -64,5 +63,75 @@
             <button type="submit" class="btn btn-primary btn-lg">Complete Registration</button>
     </div>
 </form>
+    </div>
+</div> *@
+
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model EventManagement.ViewModels.RegistrationViewModel
+
+@{
+    ViewData["Title"] = "Confirm Registration";
+}
+
+<div class="container">
+    <div class="form-card" style="max-width: 600px; margin-top: 2rem;">
+        <h1 style="text-align:center;">Confirm Your Registration</h1>
+
+        <div class="registration-summary">
+            <h3>Event: @Model.EventTitle</h3>
+            <div class="detail-item">
+                <label>Attendee</label>
+                <span>@Model.UserFullName</span>
+            </div>
+            <div class="detail-item">
+                <label>Email</label>
+                <span>@Model.UserEmail</span>
+            </div>
+            <div class="detail-item fee">
+                <label>Registration Fee</label>
+                <span>$@Model.EventFees.ToString("F2")</span>
+            </div>
+        </div>
+
+        <form asp-action="Register" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <input type="hidden" asp-for="EventId" />
+            <input type="hidden" asp-for="UserId" />
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Semester" class="form-label"></label>
+                    <input asp-for="Semester" class="form-control" placeholder="e.g., 5th" />
+                    <span asp-validation-for="Semester" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Branch" class="form-label"></label>
+                    <input asp-for="Branch" class="form-control" placeholder="e.g., Computer Engineering" />
+                    <span asp-validation-for="Branch" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                @if (Model.EventFees > 0)
+                {
+                    <label asp-for="PaymentMethod" class="form-label"></label>
+                    <select asp-for="PaymentMethod" class="form-select">
+                        <option value="">-- Select a Method --</option>
+                        <option value="CreditCard">Credit Card</option>
+                        <option value="PayPal">PayPal</option>
+                        <option value="CollegeWallet">College Wallet</option>
+                    </select>
+                    <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+                }
+
+            </div>
+
+            <div class="d-grid mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">Complete Registration</button>
+            </div>
+        </form>
     </div>
 </div>

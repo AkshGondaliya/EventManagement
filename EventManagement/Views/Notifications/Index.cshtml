@@ -1,0 +1,36 @@
+﻿@model IEnumerable<EventManagement.Models.Notification>
+
+@{
+    ViewData["Title"] = "Notifications";
+}
+
+<div class="container my-4">
+    <h2 class="mb-3">My Notifications</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">You have no notifications.</div>
+    }
+    else
+    {
+        <ul class="list-group">
+            @foreach (var notification in Model)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center
+                            @(notification.IsRead ? "" : "list-group-item-warning")">
+                    <span>@notification.Message</span>
+                    <div>
+                        <small class="text-muted">@notification.CreatedAt.ToString("g")</small>
+                        @if (!notification.IsRead)
+                        {
+                            <form asp-action="MarkAsRead" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@notification.NotificationId" />
+                                <button type="submit" class="btn btn-sm btn-outline-primary ml-2">Mark as Read</button>
+                            </form>
+                        }
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+</div>

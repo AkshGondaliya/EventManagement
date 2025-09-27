@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventManagement.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250913073742_AddVenueAndCategoryToEvent")]
-    partial class AddVenueAndCategoryToEvent
+    [Migration("20250927130945_AddNotificationTable")]
+    partial class AddNotificationTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -68,6 +68,30 @@ namespace EventManagement.Migrations
                     b.ToTable("Events");
                 });
 
+            modelBuilder.Entity("EventManagement.Models.Notification", b =>
+                {
+                    b.Property<int>("NotificationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("NotificationId");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("EventManagement.Models.Registration", b =>
                 {
                     b.Property<int>("RegistrationId")
@@ -75,11 +99,19 @@ namespace EventManagement.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Branch")
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
                     b.Property<int>("EventId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("RegistrationDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Semester")
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
@@ -134,7 +166,7 @@ namespace EventManagement.Migrations
                             UserId = 100,
                             Email = "admin@college.edu",
                             FullName = "System Admin",
-                            PasswordHash = "$2b$10$kpZgnegpH.aREMA0YJOYC.GpYtzueUQNw.P0EhR0kTbpS/GIsRYWq",
+                            PasswordHash = "$2b$10$ZIEJcWpMFAhlasBNiGpRWOlwB0cfsd17rYZpDL6RKrv/PWnCwPYYu",
                             Role = "Admin"
                         });
                 });

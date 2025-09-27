@@ -414,5 +414,46 @@ namespace CollegeEventManagement.Controllers // Note: Your namespace might be di
 
             return View(eventWithRegistrations);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            int? userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var eventToDelete = await _context.Events
+                .Include(e => e.Registrations)
+                .ThenInclude(r => r.User)
+                .FirstOrDefaultAsync(e => e.EventId == id && e.CreatedBy == userId);
+
+            if (eventToDelete == null)
+            {
+                TempData["Notification"] = "Event not found or you don't have permission to delete it.";
+                return RedirectToAction("MyCreatedEvents");
+            }
+
+            // Create notifications for all participants
+            foreach (var registration in eventToDelete.Registrations)
+            {
+                _context.Notifications.Add(new Notification
+                {
+                    UserId = registration.UserId,
+                    Message = $"The event '{eventToDelete.Title}' scheduled for {eventToDelete.EventDateTime:g} has been cancelled."
+                });
+            }
+
+            // Delete the event
+            _context.Events.Remove(eventToDelete);
+            await _context.SaveChangesAsync();
+
+            TempData["Notification"] = "Event deleted successfully and participants have been notified.";
+            return RedirectToAction("MyCreatedEvents");
+        }
+
+
     }
 }

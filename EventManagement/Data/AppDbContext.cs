@@ -11,6 +11,9 @@ namespace EventManagement.Data
         public DbSet<Event> Events { get; set; }
         public DbSet<Registration> Registrations { get; set; }
 
+        public DbSet<Notification> Notifications { get; set; }
+
+
         // ADD THIS ENTIRE METHOD
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
