@@ -1,17 +1,22 @@
 ﻿using EventManagement.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EventManagement.Repositories
 {
     public interface IUserRepository
     {
-        IEnumerable<User> GetAll();
-        User GetById(int id);
-        User GetByEmail(string email);
-        void Add(User user);
+        Task<IEnumerable<User>> GetAllAsync();
+        Task<User> GetByIdAsync(int id);
+        Task<User> GetByEmailAsync(string email);
+
+        Task AddAsync(User user);
         void Update(User user);
-        void Delete(int id);
-        bool EmailExists(string email);
+        void Delete(User user);
+
+        Task<bool> EmailExistsAsync(string email);
+
+        Task<IEnumerable<User>> GetAllUsersExceptAdminsAsync();
     }
     
 }

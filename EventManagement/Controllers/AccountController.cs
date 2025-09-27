@@ -6,6 +6,7 @@ using EventManagement.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace EventManagement.Controllers
 {
@@ -25,7 +26,7 @@ namespace EventManagement.Controllers
 
         // POST: Register
         [HttpPost]
-        public IActionResult Register(UserViewModel registerVM)
+        public async Task<IActionResult> Register(UserViewModel registerVM)
         {
             if (!ModelState.IsValid)
             {
@@ -33,7 +34,7 @@ namespace EventManagement.Controllers
             }
 
             // Check if email already exists
-            if (_unitOfWork.Users.EmailExists(registerVM.Email))
+            if (await _unitOfWork.Users.EmailExistsAsync(registerVM.Email))
             {
                 ViewBag.Error = "Email already exists!";
                 return View(registerVM);
@@ -48,8 +49,8 @@ namespace EventManagement.Controllers
             // Assign default role
             user.Role = "Student";
 
-            _unitOfWork.Users.Add(user);
-            _unitOfWork.Save();
+            await _unitOfWork.Users.AddAsync(user);
+            await _unitOfWork.SaveAsync();
 
             return RedirectToAction("Login");
         }
@@ -59,9 +60,9 @@ namespace EventManagement.Controllers
 
         // POST: Login
         [HttpPost]
-        public IActionResult Login(string email, string password)
+        public async Task<IActionResult> Login(string email, string password)
         {
-            var user = _unitOfWork.Users.GetByEmail(email);
+            var user = await _unitOfWork.Users.GetByEmailAsync(email);
 
             if (user != null && BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
             {

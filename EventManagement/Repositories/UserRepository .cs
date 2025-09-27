@@ -1,7 +1,10 @@
-﻿using EventManagement.Models;
+﻿using EventManagement.Data;
+using EventManagement.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using EventManagement.Data;
 using System.Linq;
+using System.Threading.Tasks;
+
 namespace EventManagement.Repositories
 {
     public class UserRepository : IUserRepository
@@ -13,43 +16,55 @@ namespace EventManagement.Repositories
             _context = context;
         }
 
-        public IEnumerable<User> GetAll()
+        // Get all users
+        public async Task<IEnumerable<User>> GetAllAsync()
         {
-            return _context.Users.ToList();
+            return await _context.Users.AsNoTracking().ToListAsync();
         }
 
-        public User GetById(int id)
+        // Get user by ID
+        public async Task<User> GetByIdAsync(int id)
         {
-            return _context.Users.FirstOrDefault(u => u.UserId == id);
+            return await _context.Users.FindAsync(id);
         }
 
-        public User GetByEmail(string email)
+        // Get user by email
+        public async Task<User> GetByEmailAsync(string email)
         {
-            return _context.Users.FirstOrDefault(u => u.Email == email);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public void Add(User user)
+        // Add new user
+        public async Task AddAsync(User user)
         {
-            _context.Users.Add(user);
+            await _context.Users.AddAsync(user);
         }
 
+        // Update user
         public void Update(User user)
         {
             _context.Users.Update(user);
         }
 
-        public void Delete(int id)
+        // Delete user
+        public void Delete(User user)
         {
-            var user = _context.Users.Find(id);
-            if (user != null)
-            {
-                _context.Users.Remove(user);
-            }
+            _context.Users.Remove(user);
         }
-        public bool EmailExists(string email)
+
+        // Check if email exists
+        public async Task<bool> EmailExistsAsync(string email)
         {
-            return _context.Users.Any(u => u.Email == email);
+            return await _context.Users.AnyAsync(u => u.Email == email);
+        }
+
+        // Get all non-admin users
+        public async Task<IEnumerable<User>> GetAllUsersExceptAdminsAsync()
+        {
+            return await _context.Users
+                .Where(u => u.Role != "Admin")
+                .AsNoTracking()
+                .ToListAsync();
         }
     }
-
 }

@@ -1,9 +1,11 @@
-﻿namespace EventManagement.Repositories
+﻿using System.Threading.Tasks;
+
+namespace EventManagement.Repositories
 {
     public interface IUnitOfWork
     {
         IUserRepository Users { get; }
-        void Save();
+        Task SaveAsync();
     }
 
 }
