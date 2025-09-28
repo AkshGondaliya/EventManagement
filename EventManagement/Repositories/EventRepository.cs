@@ -35,8 +35,10 @@ namespace EventManagement.Repositories
 
         public async Task<Event> GetByIdWithRegistrationsAsync(int id)
         {
+            // Include Creator for permission check
             return await _context.Events
                 .Include(e => e.Registrations)
+                .Include(e => e.Creator)
                 .FirstOrDefaultAsync(e => e.EventId == id);
         }
 

@@ -5,6 +5,11 @@
 }
 
 <div class="container my-5">
+    @if (TempData["Notification"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Notification"]</div>
+    }
+
     <div class="card bg-dark text-white">
         <div class="card-body">
             <h1 class="card-title text-center mb-4">My Events</h1>

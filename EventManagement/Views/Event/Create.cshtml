@@ -1,4 +1,4 @@
-﻿@model EventManagement.Models.Event
+﻿@model EventManagement.ViewModels.EventViewModel
 @{
     var userRole = Context.Session.GetString("Role");
     var pageTitle = userRole == "Admin" ? "Create a New Event" : "Request a New Event";

@@ -14,6 +14,7 @@ namespace EventManagement.ViewModels
         public string Description { get; set; }
 
         [Required(ErrorMessage = "Event date and time is required")]
+        [Min24HoursFromNow(ErrorMessage = "Event date and time must be at least 24 hours ahead from now.")]
         public DateTime EventDateTime { get; set; }
 
         [Required(ErrorMessage = "Maximum participants is required")]
@@ -28,5 +29,18 @@ namespace EventManagement.ViewModels
         public string Category { get; set; }
 
         public decimal Fees { get; set; }
+    }
+
+    // Custom validation attribute for 24 hours ahead
+    public class Min24HoursFromNowAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            if (value is DateTime dateTime)
+            {
+                return dateTime > DateTime.Now.AddHours(24);
+            }
+            return false;
+        }
     }
 }
