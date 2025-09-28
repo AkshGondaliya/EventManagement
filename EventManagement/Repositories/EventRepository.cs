@@ -24,6 +24,22 @@ namespace EventManagement.Repositories
                 .FirstOrDefaultAsync(e => e.EventId == id);
         }
 
+        public async Task<Event> GetByIdWithDetailsAsync(int id)
+        {
+            return await _context.Events
+                .Include(e => e.Creator)
+                .Include(e => e.Registrations)
+                .ThenInclude(r => r.User) // <-- This line is crucial
+                .FirstOrDefaultAsync(e => e.EventId == id);
+        }
+
+        public async Task<Event> GetByIdWithRegistrationsAsync(int id)
+        {
+            return await _context.Events
+                .Include(e => e.Registrations)
+                .FirstOrDefaultAsync(e => e.EventId == id);
+        }
+
         public async Task<IEnumerable<Event>> GetAllApprovedAsync()
         {
             return await _context.Events

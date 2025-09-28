@@ -7,6 +7,8 @@ namespace EventManagement.Repositories
     public interface IEventRepository
     {
         Task<Event> GetByIdAsync(int id);
+        Task<Event> GetByIdWithDetailsAsync(int id);
+        Task<Event> GetByIdWithRegistrationsAsync(int id);
         Task<IEnumerable<Event>> GetAllApprovedAsync();
         Task<IEnumerable<Event>> GetPendingApprovalAsync();
         Task<IEnumerable<Event>> GetByCreatorIdAsync(int userId);

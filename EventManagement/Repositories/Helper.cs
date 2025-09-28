@@ -8,6 +8,7 @@ namespace EventManagement.Repositories
         public Helper()
         {
             CreateMap<User, UserViewModel>().ReverseMap();
+            CreateMap<Event, EventViewModel>().ReverseMap();
         }
     }
 }
