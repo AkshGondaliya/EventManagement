@@ -8,6 +8,7 @@ namespace EventManagement.Repositories
         IEventRepository Events { get; }
         IRegistrationRepository Registrations { get; }
         INotificationRepository Notifications { get; }
+        IAdminRepository Admin { get; }
         Task SaveAsync();
     }
 

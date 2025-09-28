@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using PuppeteerSharp;
 using QRCoder;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -297,13 +298,42 @@ namespace EventManagement.Controllers
         }
 
         // GET: /Event/DownloadTicket/5
+        // In DownloadTicket action, before calling DownloadAsync, check if the browser is already downloaded.
+        // Optionally, wrap DownloadAsync in a try-catch to handle file-in-use errors gracefully.
+
         public async Task<IActionResult> DownloadTicket(int id)
         {
+            var browserFetcher = new BrowserFetcher();
+            try
+            {
+                await browserFetcher.DownloadAsync();
+            }
+            catch (IOException)
+            {
+                // Ignore if already downloaded or in use
+            }
+
+            // Generate an authentication cookie for Puppeteer
+            var authCookie = Request.Cookies[".AspNetCore.Session"];
             string ticketUrl = Url.Action("ViewTicket", "Event", new { id }, Request.Scheme);
+
             await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = true });
             await using var page = await browser.NewPageAsync();
-            await page.GoToAsync(ticketUrl, WaitUntilNavigation.Networkidle0);
 
+            // Set the session cookie so Puppeteer is authenticated
+            if (!string.IsNullOrEmpty(authCookie))
+            {
+                await page.SetCookieAsync(new CookieParam
+                {
+                    Name = ".AspNetCore.Session",
+                    Value = authCookie,
+                    Domain = Request.Host.Host,
+                    Path = "/"
+                });
+            }
+
+            await page.GoToAsync(ticketUrl, WaitUntilNavigation.Networkidle0);
+            await page.EvaluateExpressionAsync("document.querySelector('.d-print-none').remove();");
             var pdfBytes = await page.PdfDataAsync(new PdfOptions
             {
                 Format = PuppeteerSharp.Media.PaperFormat.A4,
