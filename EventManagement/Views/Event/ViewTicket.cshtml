@@ -63,6 +63,14 @@
             height: 150px;
             background-color: #e9ecef;
         }
+
+        .d-print-none {
+            display: block !important;
+        }
+       
+
+        }
+
     </style>
 </head>
 <body>
@@ -96,9 +104,8 @@
             <p class="mt-2" style="font-size: 0.8rem;">EVENTFLOW</p>
         </div>
     </div>
-    <div class="text-center mt-4">
-        @* <a href="@Url.Action("DownloadTicket", new { id = Model.RegistrationId })" class="btn btn-primary">Download as PDF</a> *@
-        <button onclick="window.print()" class="btn btn-secondary">Print Ticket</button>
+    <div class="text-center mt-4 d-print-none">
+        <a href="@Url.Action("DownloadTicket", new { id = Model.RegistrationId })" class="btn btn-primary">Download as PDF</a>
     </div>
 </body>
 </html>

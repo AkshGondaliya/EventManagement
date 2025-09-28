@@ -10,6 +10,7 @@ namespace EventManagement.Repositories
         public IEventRepository Events { get; }
         public IRegistrationRepository Registrations { get; }
         public INotificationRepository Notifications { get; }
+        public IAdminRepository Admin { get; }
 
         public UnitOfWork(AppDbContext context)
         {
@@ -18,6 +19,7 @@ namespace EventManagement.Repositories
             Events = new EventRepository(context);
             Registrations = new RegistrationRepository(context);
             Notifications = new NotificationRepository(context);
+            Admin = new AdminRepository(context);
         }
 
 

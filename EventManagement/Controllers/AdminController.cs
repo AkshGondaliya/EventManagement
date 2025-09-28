@@ -1,19 +1,20 @@
-﻿using EventManagement.Data;
+﻿using AutoMapper;
+using EventManagement.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EventManagement.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public AdminController(AppDbContext context)
+        public AdminController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         private bool IsAdmin()
@@ -32,10 +33,9 @@ namespace EventManagement.Controllers
             }
 
             // Fetch all users except the currently logged-in Admin
-            var users = await _context.Users.Where(u => u.Role != "Admin").ToListAsync();
+            var users = await _unitOfWork.Admin.GetAllUsersExceptAdminsAsync();
             return View(users);
         }
-
 
         // GET: /Admin/EventApproval
         public async Task<IActionResult> EventApproval()
@@ -46,10 +46,7 @@ namespace EventManagement.Controllers
             }
 
             // Fetch all events that are pending approval
-            var pendingEvents = await _context.Events
-                                              .Where(e => e.Status == "Pending")
-                                              .Include(e => e.Creator) // Include creator's info
-                                              .ToListAsync();
+            var pendingEvents = await _unitOfWork.Admin.GetPendingEventsAsync();
             return View(pendingEvents);
         }
 
@@ -61,9 +58,7 @@ namespace EventManagement.Controllers
                 return Forbid();
             }
 
-            var eventDetails = await _context.Events
-                                             .Include(e => e.Creator)
-                                             .FirstOrDefaultAsync(e => e.EventId == id);
+            var eventDetails = await _unitOfWork.Admin.GetEventByIdAsync(id);
 
             if (eventDetails == null || eventDetails.Status != "Pending")
             {
@@ -79,12 +74,7 @@ namespace EventManagement.Controllers
         {
             if (!IsAdmin()) return Unauthorized();
 
-            var ev = await _context.Events.FindAsync(eventId);
-            if (ev != null)
-            {
-                ev.Status = "Approved";
-                await _context.SaveChangesAsync();
-            }
+            await _unitOfWork.Admin.ApproveEventAsync(eventId);
             return RedirectToAction("EventApproval");
         }
 
@@ -94,12 +84,7 @@ namespace EventManagement.Controllers
         {
             if (!IsAdmin()) return Unauthorized();
 
-            var ev = await _context.Events.FindAsync(eventId);
-            if (ev != null)
-            {
-                ev.Status = "Rejected";
-                await _context.SaveChangesAsync();
-            }
+            await _unitOfWork.Admin.RejectEventAsync(eventId);
             return RedirectToAction("EventApproval");
         }
 
@@ -111,11 +96,7 @@ namespace EventManagement.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            var myRegs = _context.Registrations
-                .Where(r => r.UserId == userId)
-                .Include(r => r.Event) // Include Event details
-                .ToList();
-
+            var myRegs = _unitOfWork.Registrations.GetByUserIdAsync(userId.Value).Result;
             return View(myRegs);
         }
 
@@ -129,10 +110,7 @@ namespace EventManagement.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var myEvents = _context.Events
-                .Where(e => e.CreatedBy == userId)
-                .ToList();
-
+            var myEvents = _unitOfWork.Events.GetByCreatorIdAsync(userId.Value).Result;
             return View(myEvents);
         }
 
@@ -144,14 +122,10 @@ namespace EventManagement.Controllers
                 return Forbid();
             }
 
-            var user = await _context.Users.FindAsync(userId);
+            var user = await _unitOfWork.Admin.GetUserByIdAsync(userId);
             if (user != null)
             {
-                // Important: You might need to handle related data first,
-                // like deleting registrations associated with this user.
-                // For now, we will assume the database handles it or there are none.
-                _context.Users.Remove(user);
-                await _context.SaveChangesAsync();
+                await _unitOfWork.Admin.DeleteUserAsync(userId);
                 TempData["SuccessNotification"] = "User successfully deleted.";
             }
             else
