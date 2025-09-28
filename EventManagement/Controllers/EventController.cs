@@ -50,6 +50,11 @@ namespace EventManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(EventViewModel viewModel)
         {
+            // Ensure event is at least 24 hours in the future
+            if (viewModel.EventDateTime <= DateTime.Now.AddHours(24))
+            {
+                ModelState.AddModelError("EventDateTime", "Event date and time must be at least 24 hours ahead from now.");
+            }
             if (!ModelState.IsValid) return View(viewModel);
 
             int? userId = HttpContext.Session.GetInt32("UserId");
@@ -211,7 +216,7 @@ namespace EventManagement.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id, int? eventId)
         {
             int? userId = HttpContext.Session.GetInt32("UserId");
             if (userId == null)
@@ -219,7 +224,14 @@ namespace EventManagement.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            var eventToDelete = await _unitOfWork.Events.GetByIdWithRegistrationsAsync(id);
+            // Accept both 'id' and 'eventId' for compatibility with form
+            int eventIdToDelete = id;
+            if (eventId.HasValue && eventId.Value != 0)
+            {
+                eventIdToDelete = eventId.Value;
+            }
+
+            var eventToDelete = await _unitOfWork.Events.GetByIdWithRegistrationsAsync(eventIdToDelete);
 
             if (eventToDelete == null || eventToDelete.CreatedBy != userId)
             {
