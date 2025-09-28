@@ -8,12 +8,16 @@ namespace EventManagement.Repositories
 
         public IUserRepository Users { get; }
         public IEventRepository Events { get; }
+        public IRegistrationRepository Registrations { get; }
+        public INotificationRepository Notifications { get; }
 
         public UnitOfWork(AppDbContext context)
         {
             _context = context;
             Users = new UserRepository(context);
             Events = new EventRepository(context);
+            Registrations = new RegistrationRepository(context);
+            Notifications = new NotificationRepository(context);
         }
 
 

@@ -29,12 +29,10 @@
                                 {
                                     <a asp-action="ViewRegistrations" asp-route-id="@ev.EventId" class="btn btn-sm btn-outline-light">View Registrations</a>
                                 }
-                                <form asp-action="Delete" asp-route-id="@ev.EventId" method="post" class="d-inline">
-                                    @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-sm btn-danger"
-                                            onclick="return confirm('Are you sure you want to delete this event?');">
-                                        Delete
-                                    </button>
+                                <a asp-action="Edit" asp-route-id="@ev.EventId" class="btn btn-sm btn-outline-light">Edit</a>
+                                <form asp-action="Delete" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this event?');">
+                                    <input type="hidden" name="eventId" value="@ev.EventId" />
+                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                                 </form>
                             </td>
                         </tr>
