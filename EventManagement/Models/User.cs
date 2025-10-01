@@ -16,7 +16,7 @@ namespace EventManagement.Models
         [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
     ErrorMessage = "Invalid Email Address")]
         public string Email { get; set; }
-        public string PasswordHash { get; set; }
+        public string PasswordHash { get; set; } // for store hashed password
 
         // This is used only during registration and validation
         [NotMapped] // <-- Do NOT save to database

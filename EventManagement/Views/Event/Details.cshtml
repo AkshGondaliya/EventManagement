@@ -46,6 +46,11 @@
                 {
                     <button class="btn btn-info w-100" disabled>You are the creator</button>
                 }
+                else if(ViewBag.IsRegistered == true)
+                {
+                    <button class="btn btn-success w-100" disabled>Already Registered</button>
+                }
+
                 else if (Context.Session.GetInt32("UserId") != null)
                 {
                     if (spotsLeft > 0)

@@ -58,7 +58,7 @@ namespace EventManagement.Repositories
             return await _context.Users.AnyAsync(u => u.Email == email);
         }
 
-        // Get all non-admin users
+        // Get all non-admin users( use in Usermanagement)
         public async Task<IEnumerable<User>> GetAllUsersExceptAdminsAsync()
         {
             return await _context.Users

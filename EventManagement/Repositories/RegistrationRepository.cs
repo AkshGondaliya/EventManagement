@@ -15,7 +15,7 @@ namespace EventManagement.Repositories
         {
             _context = context;
         }
-
+        //specific registration
         public async Task<Registration> GetByIdAsync(int id)
         {
             return await _context.Registrations
@@ -23,7 +23,7 @@ namespace EventManagement.Repositories
                 .Include(r => r.User)
                 .FirstOrDefaultAsync(r => r.RegistrationId == id);
         }
-
+        //MY registrations
         public async Task<IEnumerable<Registration>> GetByUserIdAsync(int userId)
         {
             return await _context.Registrations

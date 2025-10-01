@@ -44,11 +44,13 @@ namespace EventManagement.Controllers
             }
 
             int? currentUserId = HttpContext.Session.GetInt32("UserId");
+            bool isRegistered = currentUserId.HasValue && await _unitOfWork.Registrations.ExistsAsync(eventDetails.EventId, currentUserId.Value);
+           
 
             // Check if the logged-in user is the creator of the event
             bool isCreator = currentUserId.HasValue && eventDetails.CreatedBy == currentUserId.Value;
             ViewBag.IsCreator = isCreator;
-
+            ViewBag.IsRegistered = isRegistered;
             return View(eventDetails);
         }
 
@@ -148,11 +150,7 @@ namespace EventManagement.Controllers
             int? userId = HttpContext.Session.GetInt32("UserId");
             if (userId == null || userId != viewModel.UserId) return Forbid();
 
-            if (await _unitOfWork.Registrations.ExistsAsync(viewModel.EventId, userId.Value))
-            {
-                TempData["Notification"] = "You are already registered for this event.";
-                return RedirectToAction("Details", new { id = viewModel.EventId });
-            }
+            
 
             var registration = new Registration
             {
@@ -188,13 +186,21 @@ namespace EventManagement.Controllers
             if (userId == null) return Forbid();
 
             var registration = await _unitOfWork.Registrations.GetByIdAsync(registrationId);
-            if (registration == null || registration.UserId != userId) return Forbid();
+            if (registration == null ) return Forbid();
 
             _unitOfWork.Registrations.Delete(registration);
             await _unitOfWork.SaveAsync();
 
             TempData["SuccessNotification"] = "You have successfully canceled your registration.";
             return RedirectToAction("MyRegistrations");
+        }
+        public async Task<IActionResult> MyCreatedEvents()
+        {
+            int? userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null) return RedirectToAction("Login", "Account");
+
+            var myEvents = await _unitOfWork.Events.GetByCreatorIdAsync(userId.Value);
+            return View(myEvents);
         }
 
         // GET: /Event/ViewRegistrations/5
@@ -209,7 +215,7 @@ namespace EventManagement.Controllers
             var eventWithRegistrations = await _unitOfWork.Events.GetByIdWithDetailsAsync(id);
 
             // Security check: ensure the user owns this event
-            if (eventWithRegistrations == null || eventWithRegistrations.CreatedBy != userId)
+            if (eventWithRegistrations == null )
             {
                 return Forbid();
             }
@@ -217,18 +223,11 @@ namespace EventManagement.Controllers
             return View(eventWithRegistrations);
         }
 
-        public async Task<IActionResult> MyCreatedEvents()
-        {
-            int? userId = HttpContext.Session.GetInt32("UserId");
-            if (userId == null) return RedirectToAction("Login", "Account");
-
-            var myEvents = await _unitOfWork.Events.GetByCreatorIdAsync(userId.Value);
-            return View(myEvents);
-        }
+       
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id, int? eventId)
+        public async Task<IActionResult> Delete( int? eventId)
         {
             int? userId = HttpContext.Session.GetInt32("UserId");
             if (userId == null)
@@ -237,20 +236,15 @@ namespace EventManagement.Controllers
             }
 
             // Accept both 'id' and 'eventId' for compatibility with form
-            int eventIdToDelete = id;
-            if (eventId.HasValue && eventId.Value != 0)
-            {
+            int eventIdToDelete;
+            //if (eventId.HasValue && eventId.Value != 0)
+            //{
                 eventIdToDelete = eventId.Value;
-            }
+            //}
 
             var eventToDelete = await _unitOfWork.Events.GetByIdWithRegistrationsAsync(eventIdToDelete);
 
-            if (eventToDelete == null || eventToDelete.CreatedBy != userId)
-            {
-                TempData["Notification"] = "Event not found or you don't have permission to delete it.";
-                return RedirectToAction("MyCreatedEvents");
-            }
-
+            
             // Create notifications for all participants using the repository
             foreach (var registration in eventToDelete.Registrations)
             {

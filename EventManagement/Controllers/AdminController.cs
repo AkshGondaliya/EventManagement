@@ -60,7 +60,7 @@ namespace EventManagement.Controllers
 
             var eventDetails = await _unitOfWork.Admin.GetEventByIdAsync(id);
 
-            if (eventDetails == null || eventDetails.Status != "Pending")
+            if (eventDetails == null )
             {
                 return NotFound();
             }
@@ -105,7 +105,7 @@ namespace EventManagement.Controllers
             int? userId = HttpContext.Session.GetInt32("UserId");
             var userRole = HttpContext.Session.GetString("Role");
 
-            if (userId == null || (userRole != "Admin" && userRole != "Event-Coordinator"))
+            if (userId == null || (userRole != "Admin"))
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -117,10 +117,7 @@ namespace EventManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteUser(int userId)
         {
-            if (!IsAdmin())
-            {
-                return Forbid();
-            }
+           
 
             var user = await _unitOfWork.Admin.GetUserByIdAsync(userId);
             if (user != null)

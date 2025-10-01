@@ -31,6 +31,7 @@ namespace EventManagement.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
         public async Task<IEnumerable<Event>> GetPendingEventsAsync()
         {
             return await _context.Events.Include(e => e.Creator).Where(e => e.Status == "Pending").ToListAsync();

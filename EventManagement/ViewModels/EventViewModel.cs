@@ -31,7 +31,7 @@ namespace EventManagement.ViewModels
         public decimal Fees { get; set; }
     }
 
-    // Custom validation attribute for 24 hours ahead
+    // Custom validation attribute for 24 hours ahead(seerver side validation)
     public class Min24HoursFromNowAttribute : ValidationAttribute
     {
         public override bool IsValid(object value)

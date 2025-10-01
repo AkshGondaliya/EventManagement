@@ -41,7 +41,7 @@ namespace EventManagement.Repositories
                 .Include(e => e.Creator)
                 .FirstOrDefaultAsync(e => e.EventId == id);
         }
-
+        // get only "approved" events
         public async Task<IEnumerable<Event>> GetAllApprovedAsync()
         {
             return await _context.Events
@@ -49,7 +49,7 @@ namespace EventManagement.Repositories
                 .Where(e => e.Status == "Approved")
                 .ToListAsync();
         }
-
+        // get only "pending" events
         public async Task<IEnumerable<Event>> GetPendingApprovalAsync()
         {
             return await _context.Events
@@ -57,7 +57,7 @@ namespace EventManagement.Repositories
                 .Where(e => e.Status == "Pending")
                 .ToListAsync();
         }
-
+        //for my events page
         public async Task<IEnumerable<Event>> GetByCreatorIdAsync(int userId)
         {
             return await _context.Events
