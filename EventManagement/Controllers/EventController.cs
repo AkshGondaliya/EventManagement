@@ -38,7 +38,17 @@ namespace EventManagement.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var eventDetails = await _unitOfWork.Events.GetByIdAsync(id);
-            if (eventDetails == null) return NotFound();
+            if (eventDetails == null)
+            {
+                return NotFound();
+            }
+
+            int? currentUserId = HttpContext.Session.GetInt32("UserId");
+
+            // Check if the logged-in user is the creator of the event
+            bool isCreator = currentUserId.HasValue && eventDetails.CreatedBy == currentUserId.Value;
+            ViewBag.IsCreator = isCreator;
+
             return View(eventDetails);
         }
 
@@ -151,7 +161,8 @@ namespace EventManagement.Controllers
                 RegistrationDate = DateTime.Now,
                 Status = "Registered",
                 Semester = viewModel.Semester,
-                Branch = viewModel.Branch
+                Branch = viewModel.Branch,
+                PaymentMethod = viewModel.PaymentMethod
             };
 
             await _unitOfWork.Registrations.AddAsync(registration);

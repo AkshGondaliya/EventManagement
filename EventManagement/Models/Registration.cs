@@ -18,6 +18,9 @@ namespace EventManagement.Models
         [StringLength(50)]
         public string Branch { get; set; } // Added Branch
 
+        [StringLength(50)]
+        public string PaymentMethod { get; set; }
+
         public User User { get; set; }
         public Event Event { get; set; }
     }

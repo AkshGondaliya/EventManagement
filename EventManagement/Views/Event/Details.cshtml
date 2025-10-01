@@ -40,8 +40,11 @@
 
                 @if (isEventOver)
                 {
-                    <!-- If the event date has passed -->
                     <button class="btn btn-danger w-100" disabled>Event Over</button>
+                }
+                else if (ViewBag.IsCreator == true)
+                {
+                    <button class="btn btn-info w-100" disabled>You are the creator</button>
                 }
                 else if (Context.Session.GetInt32("UserId") != null)
                 {

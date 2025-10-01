@@ -23,6 +23,8 @@ namespace EventManagement.ViewModels
         [StringLength(50)]
         public string Branch { get; set; }
 
+
+        [Display(Name = "Payment Method")]
         public string PaymentMethod { get; set; }
     }
 }

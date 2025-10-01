@@ -36,7 +36,11 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label asp-for="EventDateTime" class="form-label">Date and Time</label>
-                                <input asp-for="EventDateTime" class="form-control" type="datetime-local" />
+                                <input asp-for="EventDateTime"
+                                       class="form-control"
+                                       type="datetime-local"
+                                       min="@DateTime.Now.AddDays(1).ToString("yyyy-MM-ddTHH:mm")"
+                                       value="@DateTime.Now.AddDays(1).ToString("yyyy-MM-ddTHH:mm")" />
                                 <span asp-validation-for="EventDateTime" class="text-danger"></span>
                             </div>
                             <div class="col-md-6 mb-3">
