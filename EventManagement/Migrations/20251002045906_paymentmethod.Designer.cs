@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventManagement.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250927165049_init")]
-    partial class init
+    [Migration("20251002045906_paymentmethod")]
+    partial class paymentmethod
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -106,6 +106,10 @@ namespace EventManagement.Migrations
                     b.Property<int>("EventId")
                         .HasColumnType("int");
 
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
                     b.Property<DateTime>("RegistrationDate")
                         .HasColumnType("datetime2");
 
@@ -166,7 +170,7 @@ namespace EventManagement.Migrations
                             UserId = 100,
                             Email = "admin@college.edu",
                             FullName = "System Admin",
-                            PasswordHash = "$2b$10$0JygYc8yvwwA3CJ1LH69iuF7woaIGiYiTbfTzzAl3HX7O4TwqF/ky",
+                            PasswordHash = "$2b$10$9zVwj/.cxhsIe6xGH0g4g.jPflww1K4GNDSlORj1PYo7Cs/LNN3ba",
                             Role = "Admin"
                         });
                 });

@@ -8,7 +8,7 @@
 <div class="container my-5">
     <div class="text-center mb-5">
         <h1 class="display-4">Upcoming Events</h1>
-        <p class="lead text-muted">Discover and join events hosted by our community.</p>
+        <p class="lead ">Discover and join events hosted by our community.</p>
     </div>
     
     <div class="row mb-4 align-items-center">
@@ -65,7 +65,7 @@
                     <div class="event-card-body">
                         <h5 class="event-card-title">@ev.Title</h5>
                         <p class="event-card-date">@ev.EventDateTime.ToString("dddd, dd MMMM yyyy 'at' h:mm tt")</p>
-                        <p class="event-card-text">@ev.Description</p>
+                        <p class="event-card-text">@ev.Fees$</p>
                     </div>
                     <div class="event-card-footer">
                         <span>@(ev.Registrations?.Count() ?? 0) / @ev.MaxParticipants Spots Taken</span>

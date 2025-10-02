@@ -82,6 +82,10 @@ namespace EventManagement.Controllers
             await _unitOfWork.Events.AddAsync(newEvent);
             await _unitOfWork.SaveAsync();
 
+            if (userRole != "Admin")
+            {
+                TempData["RequestNotification"] = "Your request for Event is goes to the Admin";
+            }
             return RedirectToAction("MyCreatedEvents");
         }
 

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EventManagement.Migrations
 {
-    public partial class init : Migration
+    public partial class paymentmethod : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -79,7 +79,8 @@ namespace EventManagement.Migrations
                     RegistrationDate = table.Column<DateTime>(nullable: false),
                     Status = table.Column<string>(nullable: true),
                     Semester = table.Column<string>(maxLength: 50, nullable: true),
-                    Branch = table.Column<string>(maxLength: 50, nullable: true)
+                    Branch = table.Column<string>(maxLength: 50, nullable: true),
+                    PaymentMethod = table.Column<string>(maxLength: 50, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -101,7 +102,7 @@ namespace EventManagement.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "UserId", "CollegeName", "Email", "FullName", "PasswordHash", "ProfilePictureUrl", "Role" },
-                values: new object[] { 100, null, "admin@college.edu", "System Admin", "$2b$10$0JygYc8yvwwA3CJ1LH69iuF7woaIGiYiTbfTzzAl3HX7O4TwqF/ky", null, "Admin" });
+                values: new object[] { 100, null, "admin@college.edu", "System Admin", "$2b$10$9zVwj/.cxhsIe6xGH0g4g.jPflww1K4GNDSlORj1PYo7Cs/LNN3ba", null, "Admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Events_CreatedBy",

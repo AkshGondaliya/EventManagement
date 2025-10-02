@@ -10,7 +10,19 @@
     {
         showMyEventsLink = DbContext.Events.Any(e => e.CreatedBy == userId);
     }
+    int notificationCount = 0;
+
+    if (userId != null)
+    {
+        notificationCount = DbContext.Notifications.Count(n => n.UserId == userId && !n.IsRead);
+    }
+    int pendingCounts = 0;
+    if(userId != null)
+    {
+        pendingCounts = DbContext.Events.Count(e => e.Status == "Pending" );
+    }
 }
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -57,11 +69,24 @@
                                         <li><a class="dropdown-item" asp-controller="Event" asp-action="MyCreatedEvents">My Events</a></li>
                                     }
                                     <li><a class="dropdown-item" asp-controller="Event" asp-action="MyRegistrations">My Registrations</a></li>
+                                    <li>
+                                        <a asp-controller="Notifications" asp-action="Index" class="dropdown-item">
+                                        View Notifications
+                                            @if (notificationCount > 0)
+                                            {
+                                                <span class="badge bg-danger">@notificationCount</span>
+                                            }
+                                    </a></li>
                                     @if (Context.Session.GetString("Role") == "Admin")
                                     {
                                         <li><hr class="dropdown-divider"></li>
                                         <li><a class="dropdown-item" asp-controller="Admin" asp-action="UserManagement">User Management</a></li>
-                                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="EventApproval">Event Approval</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="EventApproval">Event Approval
+                                            @if (pendingCounts > 0)
+                                            {
+                                                <span class="badge bg-warning text-dark">@pendingCounts</span>
+                                                }
+                                        </a></li>
                                     }
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" asp-controller="Account" asp-action="Logout">Logout</a></li>

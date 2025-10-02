@@ -45,7 +45,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label asp-for="MaxParticipants" class="form-label">Maximum Participants</label>
-                                <input asp-for="MaxParticipants" class="form-control" type="number" placeholder="e.g., 50" />
+                                <input asp-for="MaxParticipants" class="form-control" type="number" min="5" placeholder="e.g., 50" />
                                 <span asp-validation-for="MaxParticipants" class="text-danger"></span>
                             </div>
                         </div>

@@ -168,7 +168,7 @@ namespace EventManagement.Migrations
                             UserId = 100,
                             Email = "admin@college.edu",
                             FullName = "System Admin",
-                            PasswordHash = "$2b$10$LG1FhigfHtbDqgmrFMtgwuJh9MevvVrb5z1OXJ47lQl2xHTCFXyqG",
+                            PasswordHash = "$2b$10$9zVwj/.cxhsIe6xGH0g4g.jPflww1K4GNDSlORj1PYo7Cs/LNN3ba",
                             Role = "Admin"
                         });
                 });
