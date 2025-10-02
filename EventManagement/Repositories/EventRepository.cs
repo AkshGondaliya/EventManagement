@@ -61,7 +61,7 @@ namespace EventManagement.Repositories
         public async Task<IEnumerable<Event>> GetByCreatorIdAsync(int userId)
         {
             return await _context.Events
-                .Where(e => e.CreatedBy == userId && e.Status == "Approved")
+                .Where(e => e.CreatedBy == userId)
                 .ToListAsync();
         }
 

@@ -6,96 +6,110 @@
 }
 
 <div class="container my-5">
+    <!-- Header -->
     <div class="text-center mb-5">
-        <h1 class="display-4">Upcoming Events</h1>
-        <p class="lead ">Discover and join events hosted by our community.</p>
+        <h1 class="display-4 fw-bold text-primary">Upcoming Events</h1>
+        <p class="lead text-muted">Discover and join events hosted by our community</p>
     </div>
-    
-    <div class="row mb-4 align-items-center">
-        <div class="col-md-8">
+
+    <!-- Search & Filters -->
+    <div class="row mb-5 align-items-center justify-content-center g-3">
+        <!-- Search Bar -->
+        <div class="col-lg-6 col-md-12">
             <form asp-action="Index" method="get">
-                <div class="input-group">
-                    <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" placeholder="Search events..." class="form-control" />
-                    <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                <div class="input-group shadow-sm">
+                    <input type="text" name="searchString"
+                           value="@ViewData["CurrentFilter"]"
+                           placeholder="Search events..."
+                           class="form-control border-end-0 px-3 py-2" />
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="fas fa-search"></i>
+                    </button>
                 </div>
             </form>
         </div>
-        <div class="d-flex justify-content-center gap-2 mb-5">
-    <form asp-action="Index" method="get" id="sortForm">
-        <select name="sortOrder" class="form-select" onchange="this.form.submit()">
-            <option value="">Sort by Name</option>
-            <option value="Date">Sort by Date</option>
-        </select>
-    </form>
-    
-    <div class="dropdown">
-        <button class="btn btn-outline-light dropdown-toggle" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-            Filter by Category
-        </button>
-        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="categoryDropdown">
-            <li><a class="dropdown-item" asp-action="Index">All</a></li>
-            @if (categories != null)
-            {
-                @foreach (var cat in categories)
-                {
-                    <li><a class="dropdown-item" asp-action="Index" asp-route-category="@cat">@cat</a></li>
-                }
-            }
-        </ul>
-    </div>
-</div>
+
+        <!-- Sort Dropdown -->
+        <div class="col-lg-3 col-md-6">
+            <form asp-action="Index" method="get" id="sortForm">
+                <select name="sortOrder" class="form-select shadow-sm py-2" onchange="this.form.submit()">
+                    <option value="">Sort by Name</option>
+                    <option value="Date">Sort by Date</option>
+                </select>
+            </form>
+        </div>
+
+        <!-- Category Dropdown -->
+        <div class="col-lg-3 col-md-6">
+            <div class="dropdown w-100">
+                <button class="btn btn-outline-primary w-100 dropdown-toggle shadow-sm py-2"
+                        type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    Filter by Category
+                </button>
+                <ul class="dropdown-menu shadow-sm w-100" aria-labelledby="categoryDropdown">
+                    <li><a class="dropdown-item" asp-action="Index">All</a></li>
+                    @if (categories != null)
+                    {
+                        @foreach (var cat in categories)
+                        {
+                            <li><a class="dropdown-item" asp-action="Index" asp-route-category="@cat">@cat</a></li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
     </div>
 
-    @* <div class="text-center mb-5">
-        <a asp-action="Index" class="btn btn-outline-light me-2">All</a>
-        @if (categories != null)
-        {
-            @foreach (var cat in categories)
-            {
-                <a asp-action="Index" asp-route-category="@cat" class="btn btn-outline-light me-2">@cat</a>
-            }
-        }
-    </div> *@
-
-    <div class="event-grid">
+    <!-- Event Cards Grid -->
+    <div class="row row-cols-1 row-cols-md-3 g-4">
         @foreach (var ev in Model)
         {
-            <a asp-action="Details" asp-route-id="@ev.EventId" class="event-card-link">
-                <div class="event-card">
-                    <div class="event-card-body">
-                        <h5 class="event-card-title">@ev.Title</h5>
-                        <p class="event-card-date">@ev.EventDateTime.ToString("dddd, dd MMMM yyyy 'at' h:mm tt")</p>
-                        <p class="event-card-text">@ev.Fees$</p>
+            <div class="col">
+                <a asp-action="Details" asp-route-id="@ev.EventId" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm border-0 rounded-3 event-card hover-scale">
+                        <div class="card-body p-4">
+                            <h5 class="card-title fw-bold text-primary">@ev.Title</h5>
+                            <p class="card-text mb-2">
+                                <i class="far fa-calendar-alt me-2"></i>
+                                @ev.EventDateTime.ToString("dddd, dd MMM yyyy • h:mm tt")
+                            </p>
+                            <p class="fw-semibold text-success mb-0">
+                                <i class="fas fa-ticket-alt me-2"></i>@ev.Fees$
+                            </p>
+                        </div>
+                        <div class="card-footer bg-light border-0 d-flex justify-content-between small text-muted px-4 py-3">
+                            <span>
+                                <i class="fas fa-users me-1"></i>
+                                @(ev.Registrations?.Count() ?? 0) / @ev.MaxParticipants Spots
+                            </span>
+                            <span class="fw-semibold text-primary">View Details →</span>
+                        </div>
                     </div>
-                    <div class="event-card-footer">
-                        <span>@(ev.Registrations?.Count() ?? 0) / @ev.MaxParticipants Spots Taken</span>
-                        <span class="view-details-prompt">View Details &rarr;</span>
-                    </div>
-                </div>
-            </a>
+                </a>
+            </div>
         }
     </div>
 </div>
 
 @section Scripts {
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const searchInput = document.getElementById('searchInput');
-            const eventGrid = document.getElementById('eventGrid');
-            const eventContainers = eventGrid.querySelectorAll('.event-container');
-
-            searchInput.addEventListener('keyup', function () {
-                const searchTerm = searchInput.value.toLowerCase();
-
-                eventContainers.forEach(container => {
-                    const title = container.querySelector('.event-title').textContent.toLowerCase();
-                    if (title.includes(searchTerm)) {
-                        container.style.display = 'block';
-                    } else {
-                        container.style.display = 'none';
-                    }
-                });
+        // Hover effect for cards
+        document.addEventListener("DOMContentLoaded", function () {
+            const cards = document.querySelectorAll(".hover-scale");
+            cards.forEach(card => {
+                card.addEventListener("mouseover", () => card.classList.add("shadow-lg"));
+                card.addEventListener("mouseleave", () => card.classList.remove("shadow-lg"));
             });
         });
     </script>
 }
+
+<style>
+    .hover-scale {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s;
+    }
+
+        .hover-scale:hover {
+            transform: translateY(-5px);
+        }
+</style>
