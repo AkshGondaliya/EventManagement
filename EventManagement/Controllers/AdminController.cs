@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EventManagement.Models;
 using EventManagement.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -83,7 +84,12 @@ namespace EventManagement.Controllers
         public async Task<IActionResult> RejectEvent(int eventId)
         {
             if (!IsAdmin()) return Unauthorized();
-
+            var ev = await _unitOfWork.Admin.GetEventByIdAsync(eventId);
+            await _unitOfWork.Notifications.AddAsync(new Notification
+            {
+                UserId = ev.CreatedBy,
+                Message = $"The event '{ev.Title}' is Rejected by admin."
+            });
             await _unitOfWork.Admin.RejectEventAsync(eventId);
             return RedirectToAction("EventApproval");
         }
@@ -117,7 +123,11 @@ namespace EventManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteUser(int userId)
         {
-           
+            if (await _unitOfWork.Events.HasCreatedEventsAsync(userId))
+            {
+                TempData["ExceptionNotification"] = "This user cannot be deleted because they have created one or more events.";
+                return RedirectToAction("UserManagement");
+            }
 
             var user = await _unitOfWork.Admin.GetUserByIdAsync(userId);
             if (user != null)

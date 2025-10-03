@@ -12,6 +12,7 @@ namespace EventManagement.Repositories
         Task<IEnumerable<Event>> GetAllApprovedAsync();
         Task<IEnumerable<Event>> GetPendingApprovalAsync();
         Task<IEnumerable<Event>> GetByCreatorIdAsync(int userId);
+        Task<bool> HasCreatedEventsAsync(int userId);
         Task AddAsync(Event entity);
         void Update(Event entity);
         void Delete(Event entity);

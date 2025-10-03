@@ -65,6 +65,11 @@ namespace EventManagement.Repositories
                 .ToListAsync();
         }
 
+        public async Task<bool> HasCreatedEventsAsync(int userId)
+        {
+            return await _context.Events.AnyAsync(e => e.CreatedBy == userId);
+        }
+
         public async Task AddAsync(Event entity)
         {
             await _context.Events.AddAsync(entity);

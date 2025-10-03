@@ -7,7 +7,7 @@
 <div class="container my-5">
     @if (TempData["SuccessNotification"] != null)
     {
-        <div class="alert alert-danger">@TempData["SuccessNotification"]</div>
+        <div class="alert alert-success">@TempData["SuccessNotification"]</div>
     }
     <div class="card bg-dark text-white">
         <div class="card-body">
@@ -35,11 +35,13 @@
                             <td>@reg.Event.EventDateTime.ToString("g")</td>
                             <td>@reg.RegistrationDate.ToString("g")</td>
                             <td>
-                                <a asp-action="ViewTicket" asp-route-id="@reg.RegistrationId" class="btn btn-sm btn-primary" target="_blank">View Ticket</a>
-                                <form asp-action="CancelRegistration" method="post">
-                                    <input type="hidden" name="registrationId" value="@reg.RegistrationId" />
-                                    <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
-                                </form>
+                                <div class="d-flex gap-2">
+                                    <a asp-action="ViewTicket" asp-route-id="@reg.RegistrationId" class="btn btn-sm btn-primary" target="_blank">View Ticket</a>
+                                    <form asp-action="CancelRegistration" method="post">
+                                        <input type="hidden" name="registrationId" value="@reg.RegistrationId" />
+                                        <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     }

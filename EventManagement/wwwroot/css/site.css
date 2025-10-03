@@ -925,4 +925,14 @@ textarea.form-control {
         padding-left: 2.75rem; /* 44px */
         padding-right: 2.75rem; /* 44px */
     }
+
+    /* Clickable icon on the right side for change password*/
+    .input-group .right-icon1 {
+        right: auto;
+        left: 505px;
+    }
+
+        .input-group .right-icon1:hover {
+            cursor: pointer;
+        }
         /* End of site.css */

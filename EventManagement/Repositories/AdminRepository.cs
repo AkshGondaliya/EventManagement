@@ -54,9 +54,10 @@ namespace EventManagement.Repositories
             var ev = await _context.Events.FindAsync(eventId);
             if (ev != null)
             {
-                ev.Status = "Rejected";
+                _context.Events.Remove(ev);
                 await _context.SaveChangesAsync();
             }
+
         }
     }
 }
